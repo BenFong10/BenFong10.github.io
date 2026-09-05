@@ -17,6 +17,12 @@
     <title>Benjamin Fong | Technology & Quantitative Search</title>
 
     <style>
+        @property --ambient-x { syntax: '<percentage>'; inherits: true; initial-value: 68%; }
+        @property --ambient-y { syntax: '<percentage>'; inherits: true; initial-value: 24%; }
+        @property --ambient-alpha { syntax: '<number>'; inherits: true; initial-value: .12; }
+        @property --ambient-scale { syntax: '<number>'; inherits: true; initial-value: 1; }
+        @property --global-grid-opacity { syntax: '<number>'; inherits: true; initial-value: .12; }
+
         :root {
             --bg: #08090c;
             --bg-2: #0d0f13;
@@ -29,16 +35,23 @@
             --page-pad: clamp(24px, 4.2vw, 70px);
             --max-width: 1780px;
             --scroll-progress: 0%;
+            --ambient-x: 68%;
+            --ambient-y: 24%;
+            --ambient-alpha: .12;
+            --ambient-scale: 1;
+            --global-grid-opacity: .12;
             --sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
             --display: "Instrument Serif", Georgia, "Times New Roman", serif;
+            transition: --ambient-x 1400ms cubic-bezier(.16,1,.3,1), --ambient-y 1400ms cubic-bezier(.16,1,.3,1), --ambient-alpha 1100ms ease, --ambient-scale 1400ms cubic-bezier(.16,1,.3,1), --global-grid-opacity 1100ms ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; background: var(--bg); }
+        html { scroll-behavior: smooth; scroll-padding-top: 82px; background: var(--bg); }
 
         body {
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
             background: var(--bg);
             color: var(--ink);
             font-family: var(--sans);
@@ -51,6 +64,38 @@
         button, a { -webkit-tap-highlight-color: transparent; }
         :focus-visible { outline: 1px solid var(--accent-bright); outline-offset: 6px; }
         ::selection { background: var(--accent); color: #08090c; }
+
+        .ambient-world {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: #08090c;
+        }
+        .ambient-glow {
+            position: absolute;
+            inset: -12%;
+            transform: scale(var(--ambient-scale));
+            transform-origin: var(--ambient-x) var(--ambient-y);
+            background:
+                radial-gradient(circle 34vw at var(--ambient-x) var(--ambient-y), rgba(184,154,107,var(--ambient-alpha)), transparent 67%),
+                radial-gradient(circle 54vw at 12% 86%, rgba(255,255,255,.025), transparent 72%),
+                linear-gradient(145deg, #0a0b0e 0%, #08090c 52%, #07080a 100%);
+            transition: transform 1400ms cubic-bezier(.16,1,.3,1);
+        }
+        .ambient-grid {
+            position: absolute;
+            inset: 0;
+            opacity: var(--global-grid-opacity);
+            background-image:
+                linear-gradient(rgba(255,255,255,.024) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+            background-size: 88px 88px;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.28) 62%, transparent 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.28) 62%, transparent 100%);
+        }
+        main { position: relative; z-index: 1; }
 
         .skip-link {
             position: fixed;
@@ -148,36 +193,42 @@
             overflow: hidden;
             scroll-margin-top: 78px;
         }
-
         .motion-section::before {
             content: "";
             position: absolute;
             inset: 0;
-            z-index: -2;
+            z-index: 1;
             pointer-events: none;
             background:
-                radial-gradient(circle 390px at var(--sx) var(--sy), rgba(184,154,107,.11), transparent 68%),
-                radial-gradient(circle 620px at 14% 84%, rgba(255,255,255,.026), transparent 72%);
-            transition: opacity 350ms ease;
+                radial-gradient(circle 390px at var(--sx) var(--sy), rgba(184,154,107,.115), transparent 68%),
+                radial-gradient(circle 620px at 14% 84%, rgba(255,255,255,.024), transparent 72%);
+            opacity: .8;
+            transition: opacity 700ms ease;
         }
+        .motion-section.is-current::before { opacity: 1; }
+        .motion-section > .hero-inner,
+        .motion-section > .about-inner,
+        .motion-section > .expertise-inner,
+        .motion-section > .experience-inner,
+        .motion-section > .connect-inner { position: relative; z-index: 2; }
 
         .section-grid {
             position: absolute;
             inset: 0;
-            z-index: -1;
+            z-index: 0;
             pointer-events: none;
-            opacity: .18;
+            opacity: .16;
             background-image:
                 linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
             background-size: 88px 88px;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.3) 70%, transparent 100%);
             mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.3) 70%, transparent 100%);
+            transition: opacity 900ms ease, background-size 1200ms cubic-bezier(.16,1,.3,1);
         }
+        .motion-section.is-current .section-grid { opacity: .23; background-size: 82px 82px; }
 
-        [data-depth] {
-            will-change: transform;
-            transition: transform 180ms linear;
-        }
+        [data-depth] { will-change: transform; transition: transform 180ms linear; }
 
         .section-meta {
             display: flex;
@@ -198,6 +249,16 @@
             transition-delay: var(--delay, 0ms);
         }
         .reveal.is-visible { opacity:1; transform:translateY(0); }
+
+        .cinematic-heading .mask-line { display:block; overflow:hidden; padding:.02em .04em .08em 0; margin-bottom:-.08em; }
+        .cinematic-heading .mask-line > span {
+            display:block;
+            transform:translateY(112%);
+            opacity:.12;
+            transition:transform 1050ms cubic-bezier(.16,1,.3,1), opacity 900ms ease;
+            transition-delay:calc(var(--line, 0) * 95ms);
+        }
+        .cinematic-heading.is-visible .mask-line > span { transform:translateY(0); opacity:1; }
 
         /* NAVIGATION */
 
@@ -225,6 +286,7 @@
             background:linear-gradient(to bottom, rgba(8,9,12,.78), rgba(8,9,12,.18) 74%, transparent);
             backdrop-filter:blur(8px);
             -webkit-backdrop-filter:blur(8px);
+            -webkit-mask-image:linear-gradient(to bottom, black 62%, transparent);
             mask-image:linear-gradient(to bottom, black 62%, transparent);
             transition:background 300ms ease, backdrop-filter 300ms ease;
         }
@@ -292,7 +354,7 @@
 
         .hero {
             min-height:100svh;
-            background:linear-gradient(145deg,#0b0c10 0%,#08090c 58%,#07080a 100%);
+            background:linear-gradient(145deg,rgba(11,12,16,.94) 0%,rgba(8,9,12,.9) 58%,rgba(7,8,10,.94) 100%);
         }
         .hero-inner {
             width:100%;
@@ -310,7 +372,18 @@
         .meta-right .page-count { color:var(--accent); }
 
         .hero-center { position:relative; display:flex; align-items:center; min-height:0; padding:clamp(64px,8vh,112px) 0 clamp(52px,6vh,82px); }
-        .hero-name { width:100%; }
+        .hero-network-wrap {
+            position:absolute;
+            inset:3% -1% 2% 31%;
+            z-index:0;
+            opacity:.78;
+            pointer-events:none;
+            -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.55) 14%,#000 40%,#000 88%,transparent 100%);
+            mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.55) 14%,#000 40%,#000 88%,transparent 100%);
+        }
+        .hero-network { display:block; width:100%; height:100%; }
+        .hero-network-caption { position:absolute; right:2px; bottom:2px; color:rgba(243,239,231,.25); font-size:7px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
+        .hero-name { position:relative; z-index:2; width:100%; }
         .hero-name h1 { width:fit-content; font-family:var(--display); font-size:clamp(84px,13.1vw,220px); font-weight:400; line-height:.73; letter-spacing:-.052em; text-transform:uppercase; }
         .name-mask { display:block; overflow:hidden; padding:.04em .04em .08em 0; margin-bottom:-.08em; }
         .name-line { display:block; transform:translateY(112%); clip-path:inset(100% 0 0 0); animation:name-reveal 1180ms cubic-bezier(.16,1,.3,1) forwards; }
@@ -318,7 +391,7 @@
         .name-mask:last-child .name-line { color:var(--ink); animation-delay:285ms; }
         .name-mask:last-child .name-line::after { content:"."; color:var(--accent); padding-left:.015em; }
 
-        .hero-side-note { position:absolute; right:0; top:50%; display:flex; align-items:center; gap:12px; transform:translateY(-50%) rotate(90deg) translateX(50%); transform-origin:right center; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; opacity:0; animation:fade-in 900ms ease 720ms forwards; }
+        .hero-side-note { position:absolute; right:0; top:50%; z-index:3; display:flex; align-items:center; gap:12px; transform:translateY(-50%) rotate(90deg) translateX(50%); transform-origin:right center; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; opacity:0; animation:fade-in 900ms ease 720ms forwards; }
         .hero-side-note::before { content:""; width:42px; height:1px; background:var(--rule); }
 
         .hero-footer { padding-top:26px; border-top:1px solid var(--rule); display:grid; grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr); gap:clamp(60px,8vw,140px); align-items:end; opacity:0; transform:translateY(24px); animation:fade-up 900ms cubic-bezier(.16,1,.3,1) 650ms forwards; }
@@ -337,8 +410,8 @@
 
         /* ABOUT */
 
-        .about { min-height:100svh; background:linear-gradient(180deg,#101217 0%,#0c0e12 100%); }
-        .about::after { content:"02"; position:absolute; right:-.04em; bottom:-.19em; z-index:-1; color:rgba(243,239,231,.018); font-family:var(--display); font-size:clamp(260px,42vw,720px); line-height:.8; letter-spacing:-.08em; pointer-events:none; }
+        .about { min-height:100svh; background:linear-gradient(180deg,rgba(16,18,23,.9) 0%,rgba(12,14,18,.91) 100%); }
+        .about::after { content:"02"; position:absolute; right:-.04em; bottom:-.19em; z-index:0; color:rgba(243,239,231,.018); font-family:var(--display); font-size:clamp(260px,42vw,720px); line-height:.8; letter-spacing:-.08em; pointer-events:none; }
         .about-inner { width:100%; max-width:var(--max-width); min-height:100svh; margin:0 auto; padding:clamp(135px,14vh,180px) var(--page-pad) 62px; display:grid; grid-template-rows:auto 1fr auto; gap:70px; }
         .about-grid { display:grid; grid-template-columns:minmax(0,1.16fr) minmax(360px,.84fr); gap:clamp(70px,10vw,170px); align-items:center; }
         .about-statement h2 { max-width:1050px; font-family:var(--display); font-size:clamp(64px,7.8vw,132px); font-weight:400; line-height:.86; letter-spacing:-.045em; }
@@ -350,21 +423,22 @@
         .about-lead { margin-bottom:30px; font-family:var(--display); color:var(--ink); font-size:clamp(26px,2.25vw,38px); line-height:1.18; letter-spacing:-.025em; }
         .about-body { max-width:560px; color:var(--ink-soft); font-size:clamp(14px,1vw,17px); line-height:1.72; }
         .about-facts { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--rule); }
-        .fact { min-height:118px; padding:24px 30px 18px 0; }
+        .fact { min-height:118px; padding:24px 30px 18px 0; transition:transform 420ms cubic-bezier(.16,1,.3,1), background 420ms ease; }
         .fact + .fact { padding-left:30px; border-left:1px solid var(--rule); }
+        .fact:hover { transform:translateY(-4px); }
         .fact-index { display:block; margin-bottom:24px; color:var(--accent); font-size:8px; font-weight:600; letter-spacing:.2em; }
         .fact-label { display:block; margin-bottom:7px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.19em; text-transform:uppercase; }
         .fact-value { font-family:var(--display); font-size:clamp(22px,1.7vw,29px); letter-spacing:-.02em; }
 
         /* EXPERTISE */
 
-        .expertise { min-height:100svh; background:linear-gradient(180deg,#08090c 0%,#0a0c10 100%); }
-        .expertise::after { content:"EXPERTISE"; position:absolute; left:-.03em; bottom:-.07em; z-index:-1; color:rgba(243,239,231,.016); font-family:var(--display); font-size:clamp(120px,18vw,310px); line-height:.8; letter-spacing:-.055em; pointer-events:none; white-space:nowrap; }
+        .expertise { min-height:100svh; background:linear-gradient(180deg,rgba(8,9,12,.9) 0%,rgba(10,12,16,.91) 100%); }
+        .expertise::after { content:"EXPERTISE"; position:absolute; left:-.03em; bottom:-.07em; z-index:0; color:rgba(243,239,231,.016); font-family:var(--display); font-size:clamp(120px,18vw,310px); line-height:.8; letter-spacing:-.055em; pointer-events:none; white-space:nowrap; }
         .expertise-inner { width:100%; max-width:var(--max-width); min-height:100svh; margin:0 auto; padding:clamp(135px,14vh,180px) var(--page-pad) 72px; display:grid; grid-template-rows:auto 1fr; gap:clamp(56px,8vh,92px); }
         .expertise-layout { display:grid; grid-template-columns:minmax(280px,.62fr) minmax(0,1.38fr); gap:clamp(70px,10vw,170px); align-items:start; }
         .expertise-intro { position:sticky; top:145px; padding-top:5px; }
         .expertise-intro h2 { max-width:650px; margin-bottom:30px; font-family:var(--display); font-size:clamp(54px,5.5vw,94px); font-weight:400; line-height:.9; letter-spacing:-.045em; }
-        .expertise-intro h2 span { color:rgba(243,239,231,.42); font-style:italic; }
+        .expertise-intro h2 .soft { color:rgba(243,239,231,.42); font-style:italic; }
         .expertise-intro p { max-width:430px; color:var(--ink-soft); font-size:15px; line-height:1.68; }
         .expertise-list { border-top:1px solid var(--rule); }
         .expertise-item { position:relative; min-height:154px; overflow:hidden; border-bottom:1px solid var(--rule); isolation:isolate; }
@@ -383,14 +457,14 @@
 
         /* EXPERIENCE */
 
-        .experience { min-height:100svh; background:linear-gradient(180deg,#11100e 0%,#0d0d0e 48%,#090a0d 100%); }
-        .experience::after { content:"04"; position:absolute; right:-.035em; top:14%; z-index:-1; color:rgba(243,239,231,.016); font-family:var(--display); font-size:clamp(220px,34vw,560px); line-height:.78; letter-spacing:-.08em; pointer-events:none; }
+        .experience { min-height:100svh; background:linear-gradient(180deg,rgba(17,16,14,.91) 0%,rgba(13,13,14,.9) 48%,rgba(9,10,13,.92) 100%); }
+        .experience::after { content:"04"; position:absolute; right:-.035em; top:14%; z-index:0; color:rgba(243,239,231,.016); font-family:var(--display); font-size:clamp(220px,34vw,560px); line-height:.78; letter-spacing:-.08em; pointer-events:none; }
         .experience-inner { width:100%; max-width:var(--max-width); margin:0 auto; padding:clamp(135px,14vh,180px) var(--page-pad) 82px; display:grid; gap:clamp(68px,9vh,110px); }
         .career-chapter { display:grid; grid-template-columns:minmax(310px,.72fr) minmax(0,1.28fr); gap:clamp(70px,10vw,170px); align-items:start; }
         .chapter-intro { position:sticky; top:145px; }
         .chapter-label { margin-bottom:30px; }
         .chapter-company { margin-bottom:18px; font-family:var(--display); font-size:clamp(64px,6.8vw,116px); font-weight:400; line-height:.83; letter-spacing:-.045em; }
-        .chapter-company span { display:block; color:rgba(243,239,231,.43); font-style:italic; }
+        .chapter-company span { color:rgba(243,239,231,.43); font-style:italic; }
         .chapter-period { display:inline-flex; align-items:center; gap:12px; margin-bottom:30px; color:var(--accent); font-size:9px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; }
         .chapter-period::after { content:""; width:36px; height:1px; background:var(--accent); }
         .chapter-summary { max-width:510px; color:var(--ink-soft); font-size:clamp(14px,1vw,17px); line-height:1.72; }
@@ -411,7 +485,8 @@
         .role-period .place { display:block; color:var(--ink-faint); font-size:8px; font-weight:600; line-height:1.55; letter-spacing:.14em; text-transform:uppercase; }
         .role-status { margin-bottom:13px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
         .role.is-active .role-status { color:var(--accent-bright); }
-        .role-title { margin-bottom:18px; font-family:var(--display); font-size:clamp(34px,3.35vw,58px); line-height:.96; letter-spacing:-.035em; transition:transform 500ms cubic-bezier(.16,1,.3,1); }
+        .role-title { margin-bottom:18px; font-family:var(--display); font-size:clamp(34px,3.35vw,58px); line-height:.96; letter-spacing:-.035em; transition:transform 500ms cubic-bezier(.16,1,.3,1),color 400ms ease; }
+        .role.is-active .role-title { color:#fffaf1; }
         .role:hover .role-title { transform:translateX(8px); }
         .role-copy { max-width:680px; color:var(--ink-soft); font-size:clamp(13px,.95vw,15.5px); line-height:1.68; }
 
@@ -421,31 +496,103 @@
         .experience-foot-label { display:block; margin-bottom:9px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; }
         .experience-foot-value { font-family:var(--display); font-size:clamp(19px,1.4vw,24px); letter-spacing:-.02em; }
 
-        .chapter-divider { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:18px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
+        .chapter-divider { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:18px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
         .chapter-divider::before, .chapter-divider::after { content:""; height:1px; background:linear-gradient(90deg,transparent,var(--rule)); }
         .chapter-divider::after { background:linear-gradient(90deg,var(--rule),transparent); }
 
         .previous-company { font-size:clamp(52px,5.8vw,98px); }
-        .previous-brands { margin:0 0 20px; color:rgba(243,239,231,.46); font-family:var(--display); font-size:clamp(22px,2vw,32px); font-style:italic; }
-        .previous-roles { border-top:1px solid var(--rule); }
-        .brand-block { display:grid; grid-template-columns:minmax(170px,.55fr) minmax(0,1.45fr); gap:30px; padding:31px 0; border-bottom:1px solid var(--rule); }
-        .brand-name { font-family:var(--display); font-size:clamp(27px,2.4vw,39px); letter-spacing:-.025em; }
-        .brand-parent { display:block; margin-top:8px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; }
+        .previous-company .allegis-main { color:rgba(243,239,231,.95); font-style:normal; }
+        .previous-company .allegis-soft { color:rgba(243,239,231,.63); font-style:italic; }
+        .previous-brands { margin:0 0 20px; color:rgba(243,239,231,.58); font-family:var(--display); font-size:clamp(22px,2vw,32px); font-style:italic; }
+
+        .previous-roles {
+            --line-progress:0%;
+            position:relative;
+            border-top:1px solid var(--rule);
+        }
+        .previous-roles::before, .previous-roles::after {
+            content:"";
+            position:absolute;
+            left:14px;
+            top:0;
+            width:1px;
+        }
+        .previous-roles::before { bottom:0; background:rgba(184,154,107,.14); }
+        .previous-roles::after { height:var(--line-progress); background:linear-gradient(to bottom,var(--accent-bright),var(--accent)); box-shadow:0 0 14px rgba(184,154,107,.2); transition:height 90ms linear; }
+        .brand-block {
+            position:relative;
+            display:grid;
+            grid-template-columns:minmax(170px,.55fr) minmax(0,1.45fr);
+            gap:30px;
+            padding:34px 0 34px 48px;
+            border-bottom:1px solid var(--rule);
+            opacity:.56;
+            transform:translateY(16px);
+            transition:opacity 700ms ease,transform 850ms cubic-bezier(.16,1,.3,1),background 500ms ease;
+        }
+        .brand-block::before {
+            content:"";
+            position:absolute;
+            left:9px;
+            top:42px;
+            width:10px;
+            height:10px;
+            border-radius:50%;
+            border:1px solid rgba(184,154,107,.46);
+            background:#0d0d0e;
+            transition:border-color 350ms ease,box-shadow 350ms ease,background 350ms ease;
+        }
+        .brand-block.is-active { opacity:1; transform:translateY(0); background:linear-gradient(90deg,rgba(184,154,107,.055),transparent 62%); }
+        .brand-block.is-active::before { border-color:var(--accent-bright); background:var(--accent); box-shadow:0 0 0 5px rgba(184,154,107,.035),0 0 20px rgba(184,154,107,.22); }
+        .brand-name { color:rgba(243,239,231,.9); font-family:var(--display); font-size:clamp(29px,2.55vw,42px); letter-spacing:-.025em; transition:color 400ms ease,transform 450ms cubic-bezier(.16,1,.3,1); }
+        .brand-block.is-active .brand-name { color:#fffaf1; transform:translateX(4px); }
+        .brand-parent { display:block; margin-top:8px; color:rgba(243,239,231,.42); font-size:8px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; }
         .brand-role-list { display:grid; gap:18px; }
-        .brand-role { display:grid; grid-template-columns:minmax(190px,.7fr) minmax(0,1.3fr); gap:24px; align-items:baseline; transition:transform 350ms ease; }
+        .brand-role {
+            display:grid;
+            grid-template-columns:minmax(190px,.7fr) minmax(0,1.3fr);
+            gap:24px;
+            align-items:baseline;
+            opacity:.28;
+            transform:translateY(10px);
+            transition:opacity 650ms ease,transform 700ms cubic-bezier(.16,1,.3,1),color 300ms ease;
+            transition-delay:calc(var(--i, 0) * 90ms + 80ms);
+        }
+        .brand-block.is-active .brand-role { opacity:1; transform:translateY(0); }
         .brand-role:hover { transform:translateX(6px); }
-        .brand-role-date { color:var(--accent); font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; }
-        .brand-role-title { color:var(--ink-soft); font-size:clamp(14px,1.05vw,17px); line-height:1.5; }
+        .brand-role-date { color:var(--accent-bright); font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; }
+        .brand-role-title { color:rgba(243,239,231,.76); font-size:clamp(14px,1.05vw,17px); line-height:1.5; transition:color 300ms ease; }
+        .brand-role:hover .brand-role-title { color:#fffaf1; }
 
         /* CONNECT */
 
-        .connect { min-height:100svh; background:linear-gradient(160deg,#0a0b0d 0%,#08090c 58%,#11100e 100%); }
-        .connect::after { content:"05"; position:absolute; right:-.04em; bottom:-.16em; z-index:-1; color:rgba(243,239,231,.019); font-family:var(--display); font-size:clamp(270px,42vw,720px); line-height:.8; letter-spacing:-.08em; pointer-events:none; }
+        .connect {
+            min-height:100svh;
+            background:linear-gradient(160deg,rgba(6,7,9,.96) 0%,rgba(8,9,12,.94) 58%,rgba(11,10,9,.94) 100%);
+        }
+        .connect::after { content:"05"; position:absolute; right:-.04em; bottom:-.16em; z-index:0; color:rgba(243,239,231,.018); font-family:var(--display); font-size:clamp(270px,42vw,720px); line-height:.8; letter-spacing:-.08em; pointer-events:none; }
+        .connect-halo {
+            position:absolute;
+            right:-10vw;
+            top:20%;
+            z-index:0;
+            width:min(72vw,980px);
+            aspect-ratio:1;
+            border:1px solid rgba(184,154,107,.08);
+            border-radius:50%;
+            opacity:.18;
+            transform:scale(.84);
+            transition:opacity 1200ms ease,transform 1800ms cubic-bezier(.16,1,.3,1);
+            pointer-events:none;
+        }
+        .connect-halo::before, .connect-halo::after { content:""; position:absolute; inset:13%; border:1px solid rgba(184,154,107,.07); border-radius:50%; }
+        .connect-halo::after { inset:29%; border-color:rgba(210,184,139,.09); box-shadow:0 0 100px rgba(184,154,107,.04); }
+        .connect.is-current .connect-halo { opacity:.7; transform:scale(1); }
         .connect-inner { width:100%; max-width:var(--max-width); min-height:100svh; margin:0 auto; padding:clamp(135px,14vh,180px) var(--page-pad) 44px; display:grid; grid-template-rows:auto 1fr auto; gap:clamp(64px,9vh,110px); }
         .connect-main { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:clamp(70px,10vw,170px); align-items:center; }
         .connect-heading { max-width:1120px; font-family:var(--display); font-size:clamp(86px,10.8vw,184px); font-weight:400; line-height:.78; letter-spacing:-.052em; }
-        .connect-heading .soft { display:block; color:rgba(243,239,231,.42); font-style:italic; }
-        .connect-heading .accent { color:var(--accent-bright); }
+        .connect-heading .soft { color:rgba(243,239,231,.48); font-style:italic; }
+        .connect-heading .accent { color:var(--accent-bright); text-shadow:0 0 50px rgba(184,154,107,.12); }
         .connect-copy { max-width:550px; align-self:end; padding-bottom:10px; }
         .connect-copy p { margin-bottom:34px; color:var(--ink-soft); font-size:clamp(17px,1.35vw,22px); line-height:1.55; letter-spacing:-.02em; }
         .connect-primary { position:relative; display:inline-flex; align-items:center; gap:18px; padding:12px 0; text-decoration:none; font-family:var(--display); font-size:clamp(22px,1.9vw,31px); letter-spacing:-.02em; }
@@ -453,16 +600,19 @@
         .connect-primary:hover::after { transform:scaleX(1); }
         .connect-arrow { color:var(--accent-bright); transition:transform 420ms cubic-bezier(.16,1,.3,1); }
         .connect-primary:hover .connect-arrow { transform:translate(5px,-5px); }
+        .connect-signal { display:flex; align-items:center; gap:12px; margin-top:34px; color:var(--ink-faint); font-size:7px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
+        .connect-signal::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 18px rgba(184,154,107,.45); animation:signal-pulse 2.4s ease-in-out infinite; }
 
-        .connect-links { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
-        .connect-link { position:relative; min-height:128px; padding:24px 30px 22px 0; display:grid; grid-template-columns:50px 1fr auto; gap:18px; align-items:center; text-decoration:none; overflow:hidden; isolation:isolate; }
+        .connect-links { display:grid; grid-template-columns:1.25fr .75fr .75fr; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+        .connect-link { position:relative; min-height:128px; padding:24px 30px 22px 0; display:grid; grid-template-columns:46px 1fr auto; gap:18px; align-items:center; text-decoration:none; overflow:hidden; isolation:isolate; }
         .connect-link + .connect-link { padding-left:30px; border-left:1px solid var(--rule); }
         .connect-link::before { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,rgba(184,154,107,.12),rgba(184,154,107,.025) 56%,transparent); transform:scaleX(0); transform-origin:left; transition:transform 650ms cubic-bezier(.16,1,.3,1); }
         .connect-link:hover::before { transform:scaleX(1); }
         .connect-link-index { color:var(--accent); font-size:8px; font-weight:600; letter-spacing:.2em; }
         .connect-link-label { display:block; margin-bottom:5px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; }
-        .connect-link-name { font-family:var(--display); font-size:clamp(25px,2.5vw,42px); letter-spacing:-.03em; overflow-wrap:anywhere; transition:transform 450ms cubic-bezier(.16,1,.3,1); }
-        .connect-link:hover .connect-link-name { transform:translateX(8px); }
+        .connect-link-name { font-family:var(--display); font-size:clamp(24px,2.3vw,40px); letter-spacing:-.03em; overflow-wrap:anywhere; transition:transform 450ms cubic-bezier(.16,1,.3,1),color 300ms ease; }
+        .connect-link.email-link .connect-link-name { font-size:clamp(20px,1.95vw,34px); }
+        .connect-link:hover .connect-link-name { transform:translateX(8px); color:#fffaf1; }
         .connect-link-arrow { color:var(--accent-bright); font-size:20px; transition:transform 420ms cubic-bezier(.16,1,.3,1); }
         .connect-link:hover .connect-link-arrow { transform:translate(4px,-4px); }
         .connect-footer { display:grid; grid-template-columns:1fr auto 1fr; align-items:end; gap:28px; padding-top:8px; color:var(--ink-faint); font-size:8px; font-weight:600; letter-spacing:.17em; text-transform:uppercase; }
@@ -474,6 +624,12 @@
         @keyframes fade-up { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
         @keyframes fade-in { to { opacity:1; } }
         @keyframes name-reveal { to { transform:translateY(0); clip-path:inset(0 0 0 0); } }
+        @keyframes signal-pulse { 0%,100% { opacity:.4; transform:scale(.85); } 50% { opacity:1; transform:scale(1.1); } }
+
+        @media (max-width:1180px) {
+            .connect-links { grid-template-columns:1fr 1fr; }
+            .connect-link:nth-child(3) { grid-column:1 / -1; padding-left:0; border-left:0; border-top:1px solid var(--rule); }
+        }
 
         @media (max-width:1100px) {
             .hero-footer { grid-template-columns:1fr; gap:34px; }
@@ -487,6 +643,7 @@
         @media (max-width:850px) {
             .hero-copy { grid-template-columns:1fr; gap:22px; }
             .hero-side-note { display:none; }
+            .hero-network-wrap { inset:7% -24% 8% 20%; opacity:.55; }
             .expertise-row { grid-template-columns:44px 1fr 24px; gap:18px; min-height:166px; }
             .expertise-name { grid-column:2; }
             .expertise-detail { grid-column:2 / 4; margin-top:-8px; }
@@ -498,13 +655,16 @@
             .role.is-active .role-marker::after { left:12px; }
             .brand-block { grid-template-columns:1fr; gap:22px; }
             .connect-links { grid-template-columns:1fr; }
-            .connect-link + .connect-link { padding-left:0; border-left:0; border-top:1px solid var(--rule); }
+            .connect-link:nth-child(3) { grid-column:auto; }
+            .connect-link + .connect-link, .connect-link:nth-child(3) { padding-left:0; border-left:0; border-top:1px solid var(--rule); }
         }
 
         @media (max-width:700px) {
             :root { --page-pad:22px; }
             .cursor-ring, .page-index { display:none; }
+            .ambient-grid { background-size:58px 58px; }
             .section-grid { background-size:58px 58px; opacity:.15; }
+            .motion-section.is-current .section-grid { background-size:54px 54px; opacity:.19; }
             .navbar { padding-top:20px; padding-bottom:17px; }
             .navbar.is-scrolled { padding-top:14px; padding-bottom:14px; }
             .nav-links { display:none; }
@@ -514,6 +674,8 @@
             .meta-right { display:none; }
             .hero-center { padding:92px 0 66px; }
             .hero-name h1 { font-size:clamp(72px,22vw,122px); line-height:.76; }
+            .hero-network-wrap { inset:10% -42% 13% 8%; opacity:.38; }
+            .hero-network-caption { display:none; }
             .hero-footer { padding-top:22px; gap:26px; }
             .hero-title { font-size:25px; }
             .description { font-size:15px; }
@@ -549,12 +711,16 @@
             .chapter-divider { margin:2px 0; }
             .previous-company { font-size:clamp(56px,16vw,78px); }
             .previous-brands { font-size:23px; }
+            .previous-roles::before, .previous-roles::after { left:10px; }
+            .brand-block { padding:30px 0 30px 36px; }
+            .brand-block::before { left:5px; top:38px; }
             .brand-role { grid-template-columns:1fr; gap:6px; }
+            .connect-halo { width:125vw; right:-66vw; top:24%; }
             .connect-heading { max-width:390px; font-size:clamp(76px,22vw,104px); }
             .connect-copy p { margin-bottom:28px; font-size:18px; }
             .connect-primary { font-size:25px; }
             .connect-link { min-height:112px; grid-template-columns:36px 1fr auto; gap:12px; padding:20px 0; }
-            .connect-link-name { font-size:28px; }
+            .connect-link-name, .connect-link.email-link .connect-link-name { font-size:clamp(22px,7.2vw,29px); }
             .connect-footer { grid-template-columns:1fr; gap:10px; }
             .connect-footer .center, .connect-footer .right { text-align:left; }
         }
@@ -565,15 +731,18 @@
 
         @media (prefers-reduced-motion:reduce) {
             *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-delay:0ms !important; transition-duration:.01ms !important; }
-            .page-loader, .cursor-ring, .section-jump { display:none !important; }
+            .page-loader, .cursor-ring, .section-jump, .hero-network-wrap { display:none !important; }
             .reveal { opacity:1 !important; transform:none !important; }
+            .cinematic-heading .mask-line > span { transform:none !important; opacity:1 !important; }
             [data-depth], [data-magnetic] { transform:none !important; }
-            .timeline::after { transition:none !important; }
+            .timeline::after, .previous-roles::after { transition:none !important; }
+            .brand-block, .brand-role { opacity:1 !important; transform:none !important; }
         }
     </style>
 </head>
 
 <body>
+    <div class="ambient-world" aria-hidden="true"><div class="ambient-glow"></div><div class="ambient-grid"></div></div>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="page-progress" aria-hidden="true"></div>
     <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
@@ -620,7 +789,7 @@
     </div>
 
     <main id="main">
-        <section class="hero motion-section" id="home" data-section="01" data-label="Home">
+        <section class="hero motion-section is-current" id="home" data-section="01" data-label="Home">
             <div class="section-grid" aria-hidden="true"></div>
             <div class="hero-inner">
                 <div class="hero-meta">
@@ -629,6 +798,10 @@
                 </div>
 
                 <div class="hero-center">
+                    <div class="hero-network-wrap" aria-hidden="true">
+                        <canvas class="hero-network" id="networkCanvas"></canvas>
+                        <div class="hero-network-caption">APAC / Connected Markets</div>
+                    </div>
                     <div class="hero-name" data-depth="1" data-scroll="4">
                         <h1 aria-label="Benjamin Fong">
                             <span class="name-mask"><span class="name-line">Benjamin</span></span>
@@ -668,7 +841,12 @@
                 <div class="about-grid">
                     <div class="about-statement reveal" style="--delay:80ms;">
                         <div data-depth="-.7" data-scroll="7">
-                            <h2 id="about-heading">Connecting<br><span class="soft">technology,</span><br>markets<br><span class="accent-line">&amp; people.</span></h2>
+                            <h2 id="about-heading" class="cinematic-heading">
+                                <span class="mask-line" style="--line:0"><span>Connecting</span></span>
+                                <span class="mask-line" style="--line:1"><span class="soft">technology,</span></span>
+                                <span class="mask-line" style="--line:2"><span>markets</span></span>
+                                <span class="mask-line" style="--line:3"><span class="accent-line">&amp; people.</span></span>
+                            </h2>
                         </div>
                     </div>
                     <div class="about-copy reveal" style="--delay:180ms;">
@@ -679,9 +857,9 @@
                 </div>
 
                 <div class="about-facts reveal" style="--delay:260ms;">
-                    <div class="fact"><span class="fact-index">01</span><span class="fact-label">Base</span><span class="fact-value">Hong Kong</span></div>
-                    <div class="fact"><span class="fact-index">02</span><span class="fact-label">Coverage</span><span class="fact-value">Asia-Pacific</span></div>
-                    <div class="fact"><span class="fact-index">03</span><span class="fact-label">Focus</span><span class="fact-value">Financial Markets</span></div>
+                    <div class="fact" data-hover><span class="fact-index">01</span><span class="fact-label">Base</span><span class="fact-value">Hong Kong</span></div>
+                    <div class="fact" data-hover><span class="fact-index">02</span><span class="fact-label">Coverage</span><span class="fact-value">Asia-Pacific</span></div>
+                    <div class="fact" data-hover><span class="fact-index">03</span><span class="fact-label">Focus</span><span class="fact-value">Financial Markets</span></div>
                 </div>
             </div>
         </section>
@@ -698,7 +876,11 @@
                     <div class="expertise-intro reveal" style="--delay:70ms;">
                         <div class="mini-label">Coverage</div>
                         <div data-depth=".55" data-scroll="5">
-                            <h2 id="expertise-heading">Specialist search<br><span>across technology</span><br>&amp; markets.</h2>
+                            <h2 id="expertise-heading" class="cinematic-heading">
+                                <span class="mask-line" style="--line:0"><span>Specialist search</span></span>
+                                <span class="mask-line" style="--line:1"><span class="soft">across technology</span></span>
+                                <span class="mask-line" style="--line:2"><span>&amp; markets.</span></span>
+                            </h2>
                         </div>
                         <p>Focused on specialist technology and quantitative talent across financial institutions, trading firms and emerging financial markets in Asia-Pacific.</p>
                     </div>
@@ -725,7 +907,10 @@
                     <div class="chapter-intro reveal" style="--delay:70ms;">
                         <div class="mini-label chapter-label">Current Firm</div>
                         <div data-depth="-.45" data-scroll="6">
-                            <h2 class="chapter-company" id="experience-heading">BAH<span>Partners</span></h2>
+                            <h2 class="chapter-company cinematic-heading" id="experience-heading">
+                                <span class="mask-line" style="--line:0"><span>BAH</span></span>
+                                <span class="mask-line" style="--line:1"><span class="soft">Partners</span></span>
+                            </h2>
                         </div>
                         <div class="chapter-period">2018 — Present</div>
                         <p class="chapter-summary">Technology and quantitative search across financial markets in Asia-Pacific, with exposure to investment banks, hedge funds, proprietary trading firms, FinTech and digital assets.</p>
@@ -759,27 +944,30 @@
                     <div class="chapter-intro reveal" style="--delay:70ms;">
                         <div class="mini-label chapter-label">Previous Group</div>
                         <div data-depth=".42" data-scroll="5">
-                            <h3 class="chapter-company previous-company">Allegis<span>Group</span></h3>
+                            <h3 class="chapter-company previous-company cinematic-heading">
+                                <span class="mask-line" style="--line:0"><span class="allegis-main">Allegis</span></span>
+                                <span class="mask-line" style="--line:1"><span class="allegis-soft">Group</span></span>
+                            </h3>
                         </div>
                         <div class="previous-brands">TEKsystems · Aston Carter APAC</div>
                         <div class="chapter-period">Oct 2013 — Jun 2018</div>
                         <p class="chapter-summary">Progressed through IT Infrastructure recruitment roles across two Allegis Group brands, from Recruiter through to Senior Consultant.</p>
                     </div>
 
-                    <div class="previous-roles reveal" style="--delay:160ms;">
-                        <div class="brand-block">
+                    <div class="previous-roles reveal" id="allegisTimeline" style="--delay:160ms;">
+                        <div class="brand-block" data-brand-block data-hover>
                             <div><div class="brand-name">TEKsystems</div><span class="brand-parent">Allegis Group</span></div>
                             <div class="brand-role-list">
-                                <div class="brand-role"><span class="brand-role-date">Jul 2017 — Jun 2018</span><span class="brand-role-title">Senior Consultant — IT Infrastructure</span></div>
-                                <div class="brand-role"><span class="brand-role-date">Sep 2016 — Jul 2017</span><span class="brand-role-title">Consultant — IT Infrastructure</span></div>
+                                <div class="brand-role" style="--i:0"><span class="brand-role-date">Jul 2017 — Jun 2018</span><span class="brand-role-title">Senior Consultant — IT Infrastructure</span></div>
+                                <div class="brand-role" style="--i:1"><span class="brand-role-date">Sep 2016 — Jul 2017</span><span class="brand-role-title">Consultant — IT Infrastructure</span></div>
                             </div>
                         </div>
-                        <div class="brand-block">
+                        <div class="brand-block" data-brand-block data-hover>
                             <div><div class="brand-name">Aston Carter APAC</div><span class="brand-parent">Allegis Group</span></div>
                             <div class="brand-role-list">
-                                <div class="brand-role"><span class="brand-role-date">Dec 2015 — Sep 2016</span><span class="brand-role-title">Consultant — IT Infrastructure</span></div>
-                                <div class="brand-role"><span class="brand-role-date">Sep 2014 — Dec 2015</span><span class="brand-role-title">Associate Consultant — IT Infrastructure</span></div>
-                                <div class="brand-role"><span class="brand-role-date">Oct 2013 — Sep 2014</span><span class="brand-role-title">Recruiter — IT Infrastructure</span></div>
+                                <div class="brand-role" style="--i:0"><span class="brand-role-date">Dec 2015 — Sep 2016</span><span class="brand-role-title">Consultant — IT Infrastructure</span></div>
+                                <div class="brand-role" style="--i:1"><span class="brand-role-date">Sep 2014 — Dec 2015</span><span class="brand-role-title">Associate Consultant — IT Infrastructure</span></div>
+                                <div class="brand-role" style="--i:2"><span class="brand-role-date">Oct 2013 — Sep 2014</span><span class="brand-role-title">Recruiter — IT Infrastructure</span></div>
                             </div>
                         </div>
                     </div>
@@ -789,6 +977,7 @@
 
         <section class="connect motion-section" id="connect" data-section="05" data-label="Connect" aria-labelledby="connect-heading">
             <div class="section-grid" aria-hidden="true"></div>
+            <div class="connect-halo" aria-hidden="true"></div>
             <div class="connect-inner">
                 <div class="section-meta reveal">
                     <div class="section-id"><strong>05</strong><span>/ Connect</span></div>
@@ -798,23 +987,30 @@
                 <div class="connect-main">
                     <div class="reveal" style="--delay:70ms;">
                         <div data-depth="-.6" data-scroll="7">
-                            <h2 class="connect-heading" id="connect-heading">Let's<span class="soft">connect<span class="accent">.</span></span></h2>
+                            <h2 class="connect-heading cinematic-heading" id="connect-heading">
+                                <span class="mask-line" style="--line:0"><span>Let's</span></span>
+                                <span class="mask-line" style="--line:1"><span class="soft">connect<span class="accent">.</span></span></span>
+                            </h2>
                         </div>
                     </div>
                     <div class="connect-copy reveal" style="--delay:170ms;">
                         <div class="mini-label">Start a Conversation</div>
                         <p>Always interested in conversations around technology, quantitative markets, specialist talent and the future of recruitment across Asia-Pacific.</p>
                         <a class="connect-primary" href="mailto:ben.fong@bahpartners.com" data-magnetic data-hover>Email me <span class="connect-arrow" aria-hidden="true">↗</span></a>
+                        <div class="connect-signal">Open to conversations across APAC</div>
                     </div>
                 </div>
 
                 <div>
                     <div class="connect-links reveal" style="--delay:250ms;">
-                        <a class="connect-link" href="mailto:ben.fong@bahpartners.com" aria-label="Email Benjamin Fong at ben.fong@bahpartners.com" data-hover>
+                        <a class="connect-link email-link" href="mailto:ben.fong@bahpartners.com" aria-label="Email Benjamin Fong at ben.fong@bahpartners.com" data-hover>
                             <span class="connect-link-index">01</span><span><span class="connect-link-label">Email</span><span class="connect-link-name">ben.fong@bahpartners.com</span></span><span class="connect-link-arrow" aria-hidden="true">↗</span>
                         </a>
                         <a class="connect-link" href="https://www.linkedin.com/in/fongbenjamin" target="_blank" rel="noopener noreferrer" aria-label="Open Benjamin Fong's LinkedIn profile" data-hover>
                             <span class="connect-link-index">02</span><span><span class="connect-link-label">Professional</span><span class="connect-link-name">LinkedIn</span></span><span class="connect-link-arrow" aria-hidden="true">↗</span>
+                        </a>
+                        <a class="connect-link" href="https://wa.me/nebgonf" target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat with Benjamin Fong" data-hover>
+                            <span class="connect-link-index">03</span><span><span class="connect-link-label">Direct Message</span><span class="connect-link-name">WhatsApp</span></span><span class="connect-link-arrow" aria-hidden="true">↗</span>
                         </a>
                     </div>
 
@@ -837,17 +1033,22 @@
             const mobileMenu = document.getElementById('mobileMenu');
             const cursorRing = document.getElementById('cursorRing');
             const sectionJump = document.getElementById('sectionJump');
-            const timeline = document.getElementById('bahTimeline');
+            const bahTimeline = document.getElementById('bahTimeline');
+            const allegisTimeline = document.getElementById('allegisTimeline');
+            const networkCanvas = document.getElementById('networkCanvas');
+            const heroSection = document.getElementById('home');
             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const finePointer = window.matchMedia('(pointer: fine)').matches;
             const sections = [...document.querySelectorAll('[data-section]')];
             const motionSections = [...document.querySelectorAll('.motion-section')];
             const depthEls = [...document.querySelectorAll('[data-depth]')];
+            const cinematicHeadings = [...document.querySelectorAll('.cinematic-heading')];
             const navLinks = [...document.querySelectorAll('[data-nav]')];
             const mobileLinks = [...document.querySelectorAll('[data-mobile-link]')];
             const magneticEls = [...document.querySelectorAll('[data-magnetic]')];
             const hoverEls = [...document.querySelectorAll('[data-hover]')];
             const roles = [...document.querySelectorAll('.role')];
+            const brandBlocks = [...document.querySelectorAll('[data-brand-block]')];
 
             const year = document.getElementById('year');
             if (year) year.textContent = new Date().getFullYear();
@@ -861,6 +1062,24 @@
             let ringY = pointerY;
             let ticking = false;
             let jumpTimer;
+            let activeSectionId = 'home';
+
+            const ambientPresets = {
+                home:       { x:'70%', y:'25%', alpha:.14, scale:1.02, grid:.13 },
+                about:      { x:'22%', y:'36%', alpha:.095, scale:1.04, grid:.105 },
+                expertise:  { x:'78%', y:'42%', alpha:.08, scale:1.01, grid:.09 },
+                experience: { x:'26%', y:'63%', alpha:.12, scale:1.05, grid:.115 },
+                connect:    { x:'73%', y:'72%', alpha:.19, scale:1.08, grid:.075 }
+            };
+
+            const applyAmbient = id => {
+                const preset = ambientPresets[id] || ambientPresets.home;
+                root.style.setProperty('--ambient-x', preset.x);
+                root.style.setProperty('--ambient-y', preset.y);
+                root.style.setProperty('--ambient-alpha', preset.alpha);
+                root.style.setProperty('--ambient-scale', preset.scale);
+                root.style.setProperty('--global-grid-opacity', preset.grid);
+            };
 
             const hideLoader = () => {
                 if (!pageLoader) return;
@@ -917,13 +1136,17 @@
 
                 document.documentElement.addEventListener('mouseleave', () => cursorRing?.classList.remove('is-visible'));
 
+                let ringFrame = null;
                 const animateRing = () => {
                     ringX += (pointerX - ringX) * .18;
                     ringY += (pointerY - ringY) * .18;
                     if (cursorRing) cursorRing.style.transform = `translate3d(${ringX - 13}px, ${ringY - 13}px, 0)`;
-                    requestAnimationFrame(animateRing);
+                    const moving = Math.abs(pointerX - ringX) + Math.abs(pointerY - ringY) > .35;
+                    ringFrame = moving ? requestAnimationFrame(animateRing) : null;
                 };
-                requestAnimationFrame(animateRing);
+                window.addEventListener('pointermove', () => {
+                    if (!ringFrame) ringFrame = requestAnimationFrame(animateRing);
+                }, { passive:true });
 
                 hoverEls.forEach(el => {
                     el.addEventListener('pointerenter', () => cursorRing?.classList.add('is-active'));
@@ -944,6 +1167,7 @@
             const revealItems = document.querySelectorAll('.reveal');
             if (reduceMotion || !('IntersectionObserver' in window)) {
                 revealItems.forEach(item => item.classList.add('is-visible'));
+                cinematicHeadings.forEach(item => item.classList.add('is-visible'));
             } else {
                 const revealObserver = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
@@ -954,20 +1178,42 @@
                     });
                 }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
                 revealItems.forEach(item => revealObserver.observe(item));
+
+                const headingObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold:.24, rootMargin:'0px 0px -10% 0px' });
+                cinematicHeadings.forEach(item => headingObserver.observe(item));
             }
 
-            const updateTimeline = () => {
-                if (!timeline) return;
-                const rect = timeline.getBoundingClientRect();
-                const start = window.innerHeight * .72;
-                const travel = rect.height + window.innerHeight * .38;
-                const progress = clamp((start - rect.top) / travel, 0, 1);
-                timeline.style.setProperty('--line-progress', `${progress * 100}%`);
+            const updateExperienceMotion = () => {
+                if (bahTimeline) {
+                    const rect = bahTimeline.getBoundingClientRect();
+                    const start = window.innerHeight * .72;
+                    const travel = rect.height + window.innerHeight * .38;
+                    const progress = clamp((start - rect.top) / travel, 0, 1);
+                    bahTimeline.style.setProperty('--line-progress', `${progress * 100}%`);
+                    roles.forEach(role => {
+                        const r = role.getBoundingClientRect();
+                        role.classList.toggle('is-active', r.top < window.innerHeight * .68);
+                    });
+                }
 
-                roles.forEach(role => {
-                    const r = role.getBoundingClientRect();
-                    role.classList.toggle('is-active', r.top < window.innerHeight * .68);
-                });
+                if (allegisTimeline) {
+                    const rect = allegisTimeline.getBoundingClientRect();
+                    const start = window.innerHeight * .74;
+                    const travel = rect.height + window.innerHeight * .32;
+                    const progress = clamp((start - rect.top) / travel, 0, 1);
+                    allegisTimeline.style.setProperty('--line-progress', `${progress * 100}%`);
+                    brandBlocks.forEach(block => {
+                        const r = block.getBoundingClientRect();
+                        block.classList.toggle('is-active', r.top < window.innerHeight * .72);
+                    });
+                }
             };
 
             const updateActiveSection = () => {
@@ -979,7 +1225,19 @@
                 });
                 if (!current) return;
 
-                navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === current.id));
+                if (activeSectionId !== current.id) {
+                    activeSectionId = current.id;
+                    applyAmbient(activeSectionId);
+                }
+
+                motionSections.forEach(section => section.classList.toggle('is-current', section === current));
+                navLinks.forEach(link => {
+                    const active = link.dataset.nav === current.id;
+                    link.classList.toggle('is-active', active);
+                    if (active) link.setAttribute('aria-current','location');
+                    else link.removeAttribute('aria-current');
+                });
+
                 if (pageIndex) {
                     const currentEl = pageIndex.querySelector('.current');
                     const labelEl = pageIndex.querySelector('.label');
@@ -994,7 +1252,7 @@
                 root.style.setProperty('--scroll-progress', `${clamp(scrollTop / docHeight * 100, 0, 100)}%`);
                 navbar?.classList.toggle('is-scrolled', scrollTop > 34);
                 updateActiveSection();
-                updateTimeline();
+                updateExperienceMotion();
                 updateDepth();
             };
 
@@ -1027,6 +1285,92 @@
                 });
             });
 
+            /* Signature APAC network visual */
+            if (networkCanvas && heroSection && !reduceMotion) {
+                const ctx = networkCanvas.getContext('2d');
+                const nodes = [
+                    [.08,.28],[.18,.18],[.27,.34],[.34,.16],[.41,.41],[.49,.25],[.57,.13],[.62,.45],
+                    [.69,.29],[.76,.19],[.82,.43],[.9,.31],[.31,.62],[.46,.71],[.58,.62],[.7,.73],[.84,.65],[.93,.78]
+                ];
+                const edges = [[0,1],[0,2],[1,3],[1,4],[2,4],[2,12],[3,5],[4,5],[4,6],[4,12],[5,6],[5,7],[5,8],[6,9],[7,8],[7,14],[8,9],[8,10],[9,11],[10,11],[10,16],[12,13],[13,14],[14,15],[15,16],[16,17],[7,15],[11,16]];
+                let networkVisible = true;
+                let networkFrame = null;
+                let cssW = 0;
+                let cssH = 0;
+
+                const resizeNetwork = () => {
+                    const rect = networkCanvas.getBoundingClientRect();
+                    cssW = Math.max(rect.width, 1);
+                    cssH = Math.max(rect.height, 1);
+                    const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+                    networkCanvas.width = Math.round(cssW * dpr);
+                    networkCanvas.height = Math.round(cssH * dpr);
+                    ctx.setTransform(dpr,0,0,dpr,0,0);
+                };
+
+                const drawNetwork = time => {
+                    if (!networkVisible) { networkFrame = null; return; }
+                    ctx.clearRect(0,0,cssW,cssH);
+                    const rect = networkCanvas.getBoundingClientRect();
+                    const localPX = pointerX - rect.left;
+                    const localPY = pointerY - rect.top;
+                    const pts = nodes.map((node,index) => {
+                        const baseX = node[0] * cssW;
+                        const baseY = node[1] * cssH;
+                        const driftX = Math.sin(time * .00022 + index * 1.7) * 2.2;
+                        const driftY = Math.cos(time * .00018 + index * 1.15) * 1.8;
+                        const dx = baseX - localPX;
+                        const dy = baseY - localPY;
+                        const dist = Math.hypot(dx,dy);
+                        const influence = finePointer ? clamp(1 - dist / 220, 0, 1) : 0;
+                        return { x:baseX + driftX + (dx / Math.max(dist,1)) * influence * 4, y:baseY + driftY + (dy / Math.max(dist,1)) * influence * 4, influence };
+                    });
+
+                    edges.forEach((edge,index) => {
+                        const a = pts[edge[0]];
+                        const b = pts[edge[1]];
+                        const active = Math.max(a.influence,b.influence);
+                        ctx.beginPath();
+                        ctx.moveTo(a.x,a.y);
+                        ctx.lineTo(b.x,b.y);
+                        ctx.strokeStyle = `rgba(184,154,107,${.08 + active * .19 + (index % 4 === 0 ? .025 : 0)})`;
+                        ctx.lineWidth = .7;
+                        ctx.stroke();
+                    });
+
+                    pts.forEach((p,index) => {
+                        const pulse = .45 + Math.sin(time * .0012 + index) * .12;
+                        const r = 1.2 + p.influence * 2.2;
+                        ctx.beginPath();
+                        ctx.arc(p.x,p.y,r,0,Math.PI*2);
+                        ctx.fillStyle = `rgba(210,184,139,${pulse + p.influence * .4})`;
+                        ctx.fill();
+                        if (p.influence > .15) {
+                            ctx.beginPath();
+                            ctx.arc(p.x,p.y,7 + p.influence * 9,0,Math.PI*2);
+                            ctx.fillStyle = `rgba(184,154,107,${p.influence * .045})`;
+                            ctx.fill();
+                        }
+                    });
+                    networkFrame = requestAnimationFrame(drawNetwork);
+                };
+
+                resizeNetwork();
+                networkFrame = requestAnimationFrame(drawNetwork);
+                window.addEventListener('resize', resizeNetwork, { passive:true });
+
+                if ('IntersectionObserver' in window) {
+                    const networkObserver = new IntersectionObserver(entries => {
+                        entries.forEach(entry => {
+                            networkVisible = entry.isIntersecting;
+                            if (networkVisible && !networkFrame) networkFrame = requestAnimationFrame(drawNetwork);
+                        });
+                    }, { threshold:.02 });
+                    networkObserver.observe(heroSection);
+                }
+            }
+
+            applyAmbient('home');
             updateScrollUI();
             updateSectionGlow();
         })();
