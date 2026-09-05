@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="g1" cx="78%" cy="24%" r="55%">
+      <stop offset="0" stop-color="#b89a6b" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#b89a6b" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="88" height="88" patternUnits="userSpaceOnUse">
+      <path d="M88 0H0V88" fill="none" stroke="#f3efe7" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#08090c"/>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <g fill="none" stroke="#b89a6b" stroke-opacity="0.22" stroke-width="1">
+    <path d="M733 157L800 123L872 170L929 145L1015 207L966 275L1046 325L951 369L878 332L813 384L758 328L688 350"/>
+    <path d="M800 123L813 384M872 170L878 332M929 145L951 369M733 157L966 275M758 328L1046 325"/>
+  </g>
+  <g fill="#d2b88b">
+    <circle cx="733" cy="157" r="2"/><circle cx="800" cy="123" r="2"/><circle cx="872" cy="170" r="2"/><circle cx="929" cy="145" r="2"/><circle cx="1015" cy="207" r="2"/><circle cx="966" cy="275" r="2"/><circle cx="1046" cy="325" r="2"/><circle cx="951" cy="369" r="2"/><circle cx="878" cy="332" r="2"/><circle cx="813" cy="384" r="2"/><circle cx="758" cy="328" r="2"/><circle cx="688" cy="350" r="2"/>
+    <circle cx="929" cy="265" r="4"/>
+  </g>
+  <rect x="74" y="63" width="7" height="7" fill="none" stroke="#b89a6b" transform="rotate(45 77.5 66.5)"/>
+  <text x="95" y="73" fill="#f3efe7" font-family="Helvetica Neue,Arial,sans-serif" font-size="18" font-weight="600">BF</text>
+  <text x="74" y="268" fill="#f3efe7" font-family="Helvetica Neue,Arial,sans-serif" font-size="102" font-weight="500" letter-spacing="-7">BENJAMIN FONG.</text>
+  <text x="76" y="333" fill="#d2b88b" font-family="Helvetica Neue,Arial,sans-serif" font-size="25" font-weight="500">Technology &amp; Quantitative Search</text>
+  <text x="76" y="378" fill="#f3efe7" fill-opacity="0.58" font-family="Helvetica Neue,Arial,sans-serif" font-size="18">Financial Markets · Hong Kong · APAC</text>
+  <line x1="76" y1="486" x2="1124" y2="486" stroke="#f3efe7" stroke-opacity="0.12"/>
+  <text x="76" y="532" fill="#f3efe7" fill-opacity="0.42" font-family="Helvetica Neue,Arial,sans-serif" font-size="14" letter-spacing="2">BENFONG10.GITHUB.IO</text>
+  <text x="1124" y="532" text-anchor="end" fill="#b89a6b" font-family="Helvetica Neue,Arial,sans-serif" font-size="14" letter-spacing="2">HONG KONG · APAC</text>
+</svg>
