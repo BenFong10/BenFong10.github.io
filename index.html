@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Benjamin Fong — Technology & Quantitative Search across financial markets in Hong Kong and APAC.">
     <meta name="theme-color" content="#090a0d">
+    <meta property="og:title" content="Benjamin Fong | Technology & Quantitative Search">
+    <meta property="og:description" content="Technology and quantitative search across financial markets in Hong Kong and APAC.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://benfong10.github.io/">
+    <link rel="canonical" href="https://benfong10.github.io/">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23090a0d'/%3E%3Cpath d='M18 18h15c8 0 13 4 13 10 0 4-2 7-6 8 5 1 8 4 8 9 0 8-6 12-15 12H18V18zm8 7v8h7c4 0 6-1 6-4s-2-4-6-4h-7zm0 15v10h8c4 0 7-2 7-5s-3-5-7-5h-8z' fill='%23f2eee6'/%3E%3Cpath d='M44 17l5 5-5 5-5-5 5-5z' fill='%23b79a6c'/%3E%3C/svg%3E">
     <title>Benjamin Fong | Technology & Quantitative Search</title>
 
     <style>
@@ -20,6 +26,7 @@
             --max-width: 1780px;
             --mx: 68%;
             --my: 28%;
+            --scroll-progress: 0%;
         }
 
         * {
@@ -44,6 +51,10 @@
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         body::before {
@@ -75,9 +86,52 @@
             color: inherit;
         }
 
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus-visible {
+            outline: 1px solid var(--accent);
+            outline-offset: 6px;
+        }
+
         ::selection {
             background: var(--accent);
             color: #090a0d;
+        }
+
+        .skip-link {
+            position: fixed;
+            left: 18px;
+            top: 18px;
+            z-index: 200;
+            padding: 10px 14px;
+            background: var(--ink);
+            color: var(--bg);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            transform: translateY(-160%);
+            transition: transform 220ms ease;
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+        }
+
+        .page-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 120;
+            width: var(--scroll-progress);
+            height: 2px;
+            background: linear-gradient(90deg, #8f7550, var(--accent), #d0b98f);
+            box-shadow: 0 0 16px rgba(183,154,108,.35);
+            pointer-events: none;
         }
 
         .site-shell {
@@ -86,13 +140,61 @@
             min-height: 100svh;
         }
 
+        /* LOADER */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 180;
+            display: grid;
+            place-items: center;
+            background: #08090c;
+            transition: opacity 650ms cubic-bezier(.16,1,.3,1), visibility 650ms ease;
+        }
+
+        .page-loader.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-mark {
+            display: grid;
+            justify-items: center;
+            gap: 18px;
+            color: var(--ink);
+        }
+
+        .loader-bf {
+            font-size: clamp(32px, 4vw, 58px);
+            font-weight: 500;
+            letter-spacing: -.06em;
+        }
+
+        .loader-line {
+            width: 72px;
+            height: 1px;
+            overflow: hidden;
+            background: rgba(242,238,230,.12);
+        }
+
+        .loader-line::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transform: translateX(-100%);
+            animation: loader-line 900ms cubic-bezier(.16,1,.3,1) forwards;
+        }
+
         /* NAVIGATION */
 
         .navbar {
             position: fixed;
             top: 0;
             left: 50%;
-            z-index: 20;
+            z-index: 80;
             width: 100%;
             max-width: var(--max-width);
             padding: 30px var(--page-pad) 22px;
@@ -102,6 +204,7 @@
             transform: translateX(-50%);
             opacity: 0;
             animation: nav-in 800ms cubic-bezier(.16,1,.3,1) 90ms forwards;
+            transition: padding 300ms ease;
         }
 
         .navbar::before {
@@ -113,6 +216,18 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             mask-image: linear-gradient(to bottom, black 62%, transparent);
+            transition: background 300ms ease, backdrop-filter 300ms ease;
+        }
+
+        .navbar.is-scrolled {
+            padding-top: 20px;
+            padding-bottom: 18px;
+        }
+
+        .navbar.is-scrolled::before {
+            background: linear-gradient(to bottom, rgba(9,10,13,.94), rgba(9,10,13,.76) 76%, rgba(9,10,13,.16));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .navbar::after {
@@ -186,6 +301,133 @@
         .nav-links a.is-active::after {
             transform: scaleX(1);
             transform-origin: left;
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            background: transparent;
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 1px;
+            margin: 0 auto;
+            background: currentColor;
+            transition: transform 320ms cubic-bezier(.16,1,.3,1), opacity 220ms ease;
+        }
+
+        .menu-toggle span + span {
+            margin-top: 7px;
+        }
+
+        body.menu-open .menu-toggle span:first-child {
+            transform: translateY(4px) rotate(45deg);
+        }
+
+        body.menu-open .menu-toggle span:last-child {
+            transform: translateY(-4px) rotate(-45deg);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: none;
+            padding: 118px 22px 34px;
+            background:
+                radial-gradient(circle at 70% 25%, rgba(183,154,108,.12), transparent 24%),
+                linear-gradient(155deg, rgba(11,12,16,.99), rgba(8,9,12,.995));
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 360ms ease, visibility 360ms ease;
+        }
+
+        .mobile-menu-inner {
+            min-height: calc(100svh - 152px);
+            display: grid;
+            grid-template-rows: 1fr auto;
+        }
+
+        .mobile-menu-links {
+            display: grid;
+            align-content: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-links a {
+            display: grid;
+            grid-template-columns: 38px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 17px 0;
+            border-bottom: 1px solid var(--rule);
+            color: var(--ink);
+            text-decoration: none;
+            font-size: clamp(34px, 11vw, 56px);
+            font-weight: 420;
+            line-height: 1;
+            letter-spacing: -.055em;
+        }
+
+        .mobile-menu-links .num {
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .18em;
+        }
+
+        .mobile-menu-links .arr {
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .mobile-menu-foot {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 650;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+        }
+
+        body.menu-open .mobile-menu {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .page-index {
+            position: fixed;
+            right: 22px;
+            bottom: 24px;
+            z-index: 45;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 11px;
+            border: 1px solid rgba(242,238,230,.09);
+            background: rgba(9,10,13,.48);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .page-index .current {
+            color: var(--accent);
         }
 
         /* SHARED */
@@ -1381,6 +1623,10 @@
             to { opacity: 1; }
         }
 
+        @keyframes loader-line {
+            to { transform: translateX(0); }
+        }
+
         /* TABLET */
 
         @media (max-width: 1100px) {
@@ -1511,11 +1757,25 @@
             }
 
             .navbar {
-                padding-top: 22px;
-                padding-bottom: 18px;
+                padding-top: 20px;
+                padding-bottom: 17px;
             }
 
-            .nav-links a:not(:last-child) {
+            .navbar.is-scrolled {
+                padding-top: 14px;
+                padding-bottom: 14px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle,
+            .mobile-menu {
+                display: block;
+            }
+
+            .page-index {
                 display: none;
             }
 
@@ -1802,15 +2062,35 @@
                 opacity: 1 !important;
                 transform: none !important;
             }
+
+            .page-loader {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page-progress" aria-hidden="true"></div>
+
+    <div class="page-loader" id="pageLoader" aria-hidden="true">
+        <div class="loader-mark">
+            <div class="loader-bf">BF</div>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
     <div class="orb" aria-hidden="true"></div>
 
+    <div class="page-index" id="pageIndex" aria-hidden="true">
+        <span class="current">01</span>
+        <span>/</span>
+        <span class="label">Home</span>
+    </div>
+
     <div class="site-shell">
-        <nav class="navbar" aria-label="Primary navigation">
+        <nav class="navbar" id="navbar" aria-label="Primary navigation">
             <a href="#home" class="logo" aria-label="Benjamin Fong home">
                 <span class="logo-mark" aria-hidden="true"></span>
                 <span>BF</span>
@@ -1822,10 +2102,31 @@
                 <a href="#experience" data-nav="experience">Experience</a>
                 <a href="#connect" data-nav="connect">Connect</a>
             </div>
+
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+                <span></span>
+                <span></span>
+            </button>
         </nav>
 
-        <main>
-            <section class="hero" id="home">
+        <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+            <div class="mobile-menu-inner">
+                <div class="mobile-menu-links">
+                    <a href="#home" data-mobile-link><span class="num">01</span><span>Home</span><span class="arr">↗</span></a>
+                    <a href="#about" data-mobile-link><span class="num">02</span><span>About</span><span class="arr">↗</span></a>
+                    <a href="#expertise" data-mobile-link><span class="num">03</span><span>Expertise</span><span class="arr">↗</span></a>
+                    <a href="#experience" data-mobile-link><span class="num">04</span><span>Experience</span><span class="arr">↗</span></a>
+                    <a href="#connect" data-mobile-link><span class="num">05</span><span>Connect</span><span class="arr">↗</span></a>
+                </div>
+                <div class="mobile-menu-foot">
+                    <span>Benjamin Fong</span>
+                    <span>Hong Kong · APAC</span>
+                </div>
+            </div>
+        </div>
+
+        <main id="main">
+            <section class="hero" id="home" data-section="01" data-label="Home">
                 <div class="hero-meta">
                     <div class="kicker">Technology · Quantitative · Search</div>
 
@@ -1873,7 +2174,7 @@
                 </div>
             </section>
 
-            <section class="about" id="about" aria-labelledby="about-heading">
+            <section class="about" id="about" data-section="02" data-label="About" aria-labelledby="about-heading">
                 <div class="about-inner">
                     <div class="section-meta reveal">
                         <div class="section-id">
@@ -1926,7 +2227,7 @@
                 </div>
             </section>
 
-            <section class="expertise" id="expertise" aria-labelledby="expertise-heading">
+            <section class="expertise" id="expertise" data-section="03" data-label="Expertise" aria-labelledby="expertise-heading">
                 <div class="expertise-inner">
                     <div class="section-meta reveal">
                         <div class="section-id">
@@ -1990,7 +2291,7 @@
                 </div>
             </section>
 
-            <section class="experience" id="experience" aria-labelledby="experience-heading">
+            <section class="experience" id="experience" data-section="04" data-label="Experience" aria-labelledby="experience-heading">
                 <div class="experience-inner">
                     <div class="section-meta reveal">
                         <div class="section-id">
@@ -2065,7 +2366,7 @@
                 </div>
             </section>
 
-            <section class="connect" id="connect" aria-labelledby="connect-heading">
+            <section class="connect" id="connect" data-section="05" data-label="Connect" aria-labelledby="connect-heading">
                 <div class="connect-inner">
                     <div class="section-meta reveal">
                         <div class="section-id">
@@ -2117,7 +2418,7 @@
                         </div>
 
                         <footer class="connect-footer reveal" style="--delay: 320ms;">
-                            <span>Benjamin Fong</span>
+                            <span>© <span id="year"></span> Benjamin Fong</span>
                             <span class="center">Technology · Quantitative · Search</span>
                             <span class="right">Hong Kong · APAC</span>
                         </footer>
@@ -2130,8 +2431,40 @@
     <script>
         (() => {
             const root = document.documentElement;
+            const body = document.body;
             const heroName = document.getElementById('heroName');
+            const navbar = document.getElementById('navbar');
+            const pageLoader = document.getElementById('pageLoader');
+            const pageIndex = document.getElementById('pageIndex');
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileLinks = [...document.querySelectorAll('[data-mobile-link]')];
             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const sections = [...document.querySelectorAll('[data-section]')];
+
+            const year = document.getElementById('year');
+            if (year) year.textContent = new Date().getFullYear();
+
+            const hideLoader = () => {
+                if (!pageLoader) return;
+                window.setTimeout(() => pageLoader.classList.add('is-hidden'), reduceMotion ? 0 : 380);
+            };
+
+            if (document.readyState === 'complete') hideLoader();
+            else window.addEventListener('load', hideLoader, { once: true });
+
+            const setMenu = (open) => {
+                body.classList.toggle('menu-open', open);
+                menuToggle?.setAttribute('aria-expanded', String(open));
+                menuToggle?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                mobileMenu?.setAttribute('aria-hidden', String(!open));
+            };
+
+            menuToggle?.addEventListener('click', () => setMenu(!body.classList.contains('menu-open')));
+            mobileLinks.forEach(link => link.addEventListener('click', () => setMenu(false)));
+            window.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && body.classList.contains('menu-open')) setMenu(false);
+            });
 
             if (!reduceMotion && heroName) {
                 let targetX = 0;
@@ -2181,28 +2514,57 @@
             }
 
             const navLinks = [...document.querySelectorAll('[data-nav]')];
-            const trackedSections = navLinks
-                .map(link => document.getElementById(link.dataset.nav))
-                .filter(Boolean);
 
-            if ('IntersectionObserver' in window && trackedSections.length) {
-                const sectionObserver = new IntersectionObserver((entries) => {
-                    const visible = entries
-                        .filter(entry => entry.isIntersecting)
-                        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            const updateActiveSection = () => {
+                const marker = window.innerHeight * 0.42;
+                let current = sections[0];
 
-                    if (!visible) return;
-
-                    navLinks.forEach(link => {
-                        link.classList.toggle('is-active', link.dataset.nav === visible.target.id);
-                    });
-                }, {
-                    threshold: [0.28, 0.42, 0.58],
-                    rootMargin: '-15% 0px -35% 0px'
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= marker && rect.bottom > marker) current = section;
                 });
 
-                trackedSections.forEach(section => sectionObserver.observe(section));
-            }
+                if (!current) return;
+
+                const id = current.id;
+                const num = current.dataset.section || '01';
+                const label = current.dataset.label || 'Home';
+
+                navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === id));
+
+                if (pageIndex) {
+                    const currentEl = pageIndex.querySelector('.current');
+                    const labelEl = pageIndex.querySelector('.label');
+                    if (currentEl) currentEl.textContent = num;
+                    if (labelEl) labelEl.textContent = label;
+                }
+            };
+
+            const updateScrollUI = () => {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const docHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+                const progress = Math.min(100, Math.max(0, (scrollTop / docHeight) * 100));
+                root.style.setProperty('--scroll-progress', `${progress}%`);
+                navbar?.classList.toggle('is-scrolled', scrollTop > 34);
+                updateActiveSection();
+            };
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    updateScrollUI();
+                    ticking = false;
+                });
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 700 && body.classList.contains('menu-open')) setMenu(false);
+                updateScrollUI();
+            }, { passive: true });
+
+            updateScrollUI();
         })();
     </script>
 </body>
