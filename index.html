@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Benjamin Fong | Technology & Quantitative Search</title>
+
+    <style>
+
+        /* ------------------------------
+           RESET
+        ------------------------------ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f2f0eb;
+            color: #111111;
+
+            font-family:
+                "Helvetica Neue",
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        /* ------------------------------
+           NAVIGATION
+        ------------------------------ */
+
+        .navbar {
+            width: 100%;
+            max-width: 1600px;
+
+            margin: 0 auto;
+            padding: 32px 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+
+            z-index: 10;
+        }
+
+        .logo {
+            color: #111;
+            text-decoration: none;
+
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 34px;
+        }
+
+        .nav-links a {
+            position: relative;
+
+            color: #111;
+            text-decoration: none;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .nav-links a::after {
+            content: "";
+
+            position: absolute;
+            left: 0;
+            bottom: -7px;
+
+            width: 0;
+            height: 1px;
+
+            background: #111;
+
+            transition: width 0.25s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+
+        /* ------------------------------
+           HERO
+        ------------------------------ */
+
+        .hero {
+            min-height: 100vh;
+
+            max-width: 1600px;
+            margin: 0 auto;
+
+            padding:
+                150px 48px
+                55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hero-top {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .location {
+            font-size: 11px;
+            font-weight: 500;
+
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+
+            opacity: 0.55;
+        }
+
+
+        /* ------------------------------
+           NAME
+        ------------------------------ */
+
+        .hero-name {
+            margin-top: auto;
+            margin-bottom: 55px;
+        }
+
+        .hero-name h1 {
+            font-size:
+                clamp(84px, 14.5vw, 230px);
+
+            font-weight: 500;
+
+            line-height: 0.76;
+            letter-spacing: -0.075em;
+
+            text-transform: uppercase;
+        }
+
+
+        /* ------------------------------
+           HERO FOOTER
+        ------------------------------ */
+
+        .hero-footer {
+            padding-top: 30px;
+
+            border-top: 1px solid rgba(0,0,0,0.15);
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 60px;
+
+            align-items: end;
+        }
+
+        .hero-intro h2 {
+            margin-bottom: 8px;
+
+            font-size: 22px;
+            font-weight: 500;
+
+            letter-spacing: -0.025em;
+        }
+
+        .sector {
+            margin-bottom: 22px;
+
+            font-size: 13px;
+
+            letter-spacing: 0.03em;
+
+            opacity: 0.55;
+        }
+
+        .description {
+            max-width: 570px;
+
+            font-size: 17px;
+            line-height: 1.6;
+
+            letter-spacing: -0.01em;
+        }
+
+
+        /* ------------------------------
+           ACTIONS
+        ------------------------------ */
+
+        .hero-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 38px;
+
+            padding-bottom: 2px;
+        }
+
+        .hero-actions a {
+            color: #111;
+
+            text-decoration: none;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .hero-actions a:hover {
+            opacity: 0.55;
+            transform: translateY(-2px);
+        }
+
+
+        /* ------------------------------
+           MOBILE
+        ------------------------------ */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 25px 22px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding:
+                    120px 22px
+                    35px;
+            }
+
+            .hero-top {
+                justify-content: flex-start;
+            }
+
+            .hero-name {
+                margin-bottom: 45px;
+            }
+
+            .hero-name h1 {
+                font-size: clamp(
+                    72px,
+                    22vw,
+                    140px
+                );
+
+                line-height: 0.8;
+            }
+
+            .hero-footer {
+                grid-template-columns: 1fr;
+                gap: 45px;
+            }
+
+            .description {
+                font-size: 16px;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a
+            href="#home"
+            class="logo"
+        >
+            BF
+        </a>
+
+        <div class="nav-links">
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#expertise">
+                Expertise
+            </a>
+
+            <a href="#experience">
+                Experience
+            </a>
+
+            <a href="#connect">
+                Connect
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- HOME -->
+
+    <main>
+
+        <section
+            class="hero"
+            id="home"
+        >
+
+            <div class="hero-top">
+
+                <div class="location">
+                    Hong Kong · APAC
+                </div>
+
+            </div>
+
+
+
+            <div class="hero-name">
+
+                <h1>
+                    Benjamin<br>
+                    Fong
+                </h1>
+
+            </div>
+
+
+
+            <div class="hero-footer">
+
+                <div class="hero-intro">
+
+                    <h2>
+                        Technology & Quantitative Search
+                    </h2>
+
+                    <p class="sector">
+                        Financial Markets · Hong Kong · APAC
+                    </p>
+
+                    <p class="description">
+                        Connecting exceptional technology
+                        and quantitative talent with leading
+                        financial institutions across
+                        Asia-Pacific.
+                    </p>
+
+                </div>
+
+
+                <div class="hero-actions">
+
+                    <a href="#about">
+                        Explore ↓
+                    </a>
+
+                    <a href="#connect">
+                        Connect →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+</body>
+
+</html>
