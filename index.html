@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="description" content="Benjamin Fong — Technology & Quantitative Search across financial markets in Hong Kong and APAC.">
     <title>Benjamin Fong | Technology & Quantitative Search</title>
 
     <style>
-
-        /* ------------------------------
-           RESET
-        ------------------------------ */
+        :root {
+            --bg: #f2f0eb;
+            --ink: #0a0a0a;
+            --muted: rgba(10, 10, 10, 0.48);
+            --rule: rgba(10, 10, 10, 0.16);
+            --page-pad: clamp(24px, 4.1vw, 64px);
+            --max-width: 1680px;
+        }
 
         * {
             margin: 0;
@@ -24,272 +27,273 @@
         }
 
         body {
-            background: #f2f0eb;
-            color: #111111;
-
-            font-family:
-                "Helvetica Neue",
-                Helvetica,
-                Arial,
-                sans-serif;
-
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
+        a {
+            color: inherit;
+        }
 
-        /* ------------------------------
-           NAVIGATION
-        ------------------------------ */
+        /* NAVIGATION */
 
         .navbar {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            z-index: 20;
             width: 100%;
-            max-width: 1600px;
-
-            margin: 0 auto;
-            padding: 32px 48px;
-
+            max-width: var(--max-width);
+            padding: 31px var(--page-pad);
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-            position: absolute;
-            left: 50%;
             transform: translateX(-50%);
-
-            z-index: 10;
+            opacity: 0;
+            animation: fade-down 700ms cubic-bezier(.22,.61,.36,1) 80ms forwards;
         }
 
         .logo {
-            color: #111;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
+            font-size: 17px;
+            font-weight: 650;
+            letter-spacing: -0.045em;
+        }
 
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.03em;
+        .logo::after {
+            content: "";
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.38;
+            transform: translateY(-1px);
         }
 
         .nav-links {
             display: flex;
-            gap: 34px;
+            align-items: center;
+            gap: clamp(24px, 2.5vw, 40px);
         }
 
         .nav-links a {
             position: relative;
-
-            color: #111;
+            padding: 4px 0;
             text-decoration: none;
-
-            font-size: 12px;
-            font-weight: 500;
-
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.13em;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
         }
 
         .nav-links a::after {
             content: "";
-
             position: absolute;
             left: 0;
-            bottom: -7px;
-
-            width: 0;
-            height: 1px;
-
-            background: #111;
-
-            transition: width 0.25s ease;
-        }
-
-        .nav-links a:hover::after {
+            bottom: -3px;
             width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 320ms cubic-bezier(.22,.61,.36,1);
         }
 
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
 
-        /* ------------------------------
-           HERO
-        ------------------------------ */
+        /* HERO */
 
         .hero {
-            min-height: 100vh;
-
-            max-width: 1600px;
+            width: 100%;
+            max-width: var(--max-width);
+            min-height: 100svh;
             margin: 0 auto;
-
-            padding:
-                150px 48px
-                55px;
-
+            padding: 143px var(--page-pad) 42px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
         .hero-top {
             display: flex;
             justify-content: flex-end;
+            opacity: 0;
+            animation: fade-in 700ms ease 280ms forwards;
         }
 
-        .location {
-            font-size: 11px;
-            font-weight: 500;
-
-            letter-spacing: 0.16em;
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-
-            opacity: 0.55;
+            color: var(--muted);
+            white-space: nowrap;
         }
 
-
-        /* ------------------------------
-           NAME
-        ------------------------------ */
+        /* NAME */
 
         .hero-name {
-            margin-top: auto;
-            margin-bottom: 55px;
+            margin-top: clamp(145px, 18vh, 225px);
+            margin-bottom: clamp(44px, 6vh, 74px);
         }
 
         .hero-name h1 {
-            font-size:
-                clamp(84px, 14.5vw, 230px);
-
-            font-weight: 500;
-
-            line-height: 0.76;
-            letter-spacing: -0.075em;
-
+            font-size: clamp(76px, 13.2vw, 218px);
+            font-weight: 450;
+            line-height: 0.765;
+            letter-spacing: -0.078em;
             text-transform: uppercase;
         }
 
+        .name-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(42px);
+            animation: name-rise 900ms cubic-bezier(.16,1,.3,1) forwards;
+        }
 
-        /* ------------------------------
-           HERO FOOTER
-        ------------------------------ */
+        .name-line:first-child {
+            animation-delay: 150ms;
+        }
+
+        .name-line:last-child {
+            animation-delay: 250ms;
+        }
+
+        /* HERO FOOTER */
 
         .hero-footer {
-            padding-top: 30px;
-
-            border-top: 1px solid rgba(0,0,0,0.15);
-
+            margin-top: auto;
+            padding-top: 27px;
+            border-top: 1px solid var(--rule);
             display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 60px;
-
+            grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+            gap: clamp(48px, 8vw, 130px);
             align-items: end;
+            opacity: 0;
+            transform: translateY(18px);
+            animation: footer-rise 750ms cubic-bezier(.22,.61,.36,1) 520ms forwards;
         }
 
         .hero-intro h2 {
-            margin-bottom: 8px;
-
-            font-size: 22px;
+            margin-bottom: 7px;
+            font-size: clamp(18px, 1.55vw, 24px);
             font-weight: 500;
-
-            letter-spacing: -0.025em;
+            line-height: 1.12;
+            letter-spacing: -0.035em;
         }
 
         .sector {
-            margin-bottom: 22px;
-
-            font-size: 13px;
-
-            letter-spacing: 0.03em;
-
-            opacity: 0.55;
+            margin-bottom: 23px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.045em;
         }
 
         .description {
-            max-width: 570px;
-
-            font-size: 17px;
-            line-height: 1.6;
-
-            letter-spacing: -0.01em;
+            max-width: 610px;
+            font-size: clamp(15px, 1.05vw, 17px);
+            line-height: 1.58;
+            letter-spacing: -0.018em;
         }
 
-
-        /* ------------------------------
-           ACTIONS
-        ------------------------------ */
+        /* ACTIONS */
 
         .hero-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 38px;
-
+            align-items: center;
+            gap: clamp(28px, 3.4vw, 52px);
             padding-bottom: 2px;
         }
 
         .hero-actions a {
-            color: #111;
-
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
             text-decoration: none;
-
-            font-size: 11px;
-            font-weight: 600;
-
-            letter-spacing: 0.14em;
+            font-size: 10px;
+            font-weight: 650;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-
-            transition:
-                opacity 0.2s ease,
-                transform 0.2s ease;
         }
 
-        .hero-actions a:hover {
-            opacity: 0.55;
-            transform: translateY(-2px);
+        .hero-actions .arrow {
+            display: inline-block;
+            font-size: 13px;
+            line-height: 1;
+            transition: transform 300ms cubic-bezier(.22,.61,.36,1);
         }
 
+        .hero-actions a:hover .arrow,
+        .hero-actions a:focus-visible .arrow {
+            transform: translateX(4px);
+        }
 
-        /* ------------------------------
-           MOBILE
-        ------------------------------ */
+        .hero-actions a:first-child:hover .arrow,
+        .hero-actions a:first-child:focus-visible .arrow {
+            transform: translateY(4px);
+        }
 
-        @media (max-width: 800px) {
+        /* MOTION */
 
-            .navbar {
-                padding: 25px 22px;
+        @keyframes name-rise {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
-            .nav-links {
-                display: none;
+        @keyframes fade-down {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -10px);
             }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
 
+        @keyframes fade-in {
+            to { opacity: 1; }
+        }
+
+        @keyframes footer-rise {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* TABLET */
+
+        @media (max-width: 980px) {
             .hero {
-                padding:
-                    120px 22px
-                    35px;
-            }
-
-            .hero-top {
-                justify-content: flex-start;
+                padding-top: 128px;
             }
 
             .hero-name {
-                margin-bottom: 45px;
-            }
-
-            .hero-name h1 {
-                font-size: clamp(
-                    72px,
-                    22vw,
-                    140px
-                );
-
-                line-height: 0.8;
+                margin-top: clamp(150px, 20vh, 210px);
             }
 
             .hero-footer {
                 grid-template-columns: 1fr;
-                gap: 45px;
-            }
-
-            .description {
-                font-size: 16px;
+                gap: 34px;
             }
 
             .hero-actions {
@@ -297,119 +301,131 @@
             }
         }
 
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+            :root {
+                --page-pad: 22px;
+            }
+
+            .navbar {
+                padding-top: 23px;
+                padding-bottom: 23px;
+            }
+
+            .nav-links {
+                gap: 18px;
+            }
+
+            .nav-links a:not(:last-child) {
+                display: none;
+            }
+
+            .hero {
+                min-height: 100svh;
+                padding-top: 105px;
+                padding-bottom: 28px;
+            }
+
+            .hero-top {
+                justify-content: flex-start;
+            }
+
+            .eyebrow {
+                font-size: 9px;
+                white-space: normal;
+            }
+
+            .hero-name {
+                margin-top: clamp(120px, 18vh, 170px);
+                margin-bottom: 42px;
+            }
+
+            .hero-name h1 {
+                font-size: clamp(64px, 22vw, 122px);
+                line-height: 0.8;
+                letter-spacing: -0.072em;
+            }
+
+            .hero-footer {
+                padding-top: 22px;
+                gap: 30px;
+            }
+
+            .hero-intro h2 {
+                font-size: 19px;
+            }
+
+            .sector {
+                margin-bottom: 18px;
+            }
+
+            .description {
+                max-width: 34rem;
+                font-size: 15px;
+            }
+
+            .hero-actions {
+                gap: 30px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-delay: 0ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 
-
 <body>
-
-
-    <!-- NAVIGATION -->
-
-    <nav class="navbar">
-
-        <a
-            href="#home"
-            class="logo"
-        >
-            BF
-        </a>
+    <nav class="navbar" aria-label="Primary navigation">
+        <a href="#home" class="logo" aria-label="Benjamin Fong home">BF</a>
 
         <div class="nav-links">
-
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#expertise">
-                Expertise
-            </a>
-
-            <a href="#experience">
-                Experience
-            </a>
-
-            <a href="#connect">
-                Connect
-            </a>
-
+            <a href="#about">About</a>
+            <a href="#expertise">Expertise</a>
+            <a href="#experience">Experience</a>
+            <a href="#connect">Connect</a>
         </div>
-
     </nav>
 
-
-
-    <!-- HOME -->
-
     <main>
-
-        <section
-            class="hero"
-            id="home"
-        >
-
+        <section class="hero" id="home">
             <div class="hero-top">
-
-                <div class="location">
-                    Hong Kong · APAC
-                </div>
-
+                <div class="eyebrow">Technology · Quantitative · Search</div>
             </div>
-
-
 
             <div class="hero-name">
-
-                <h1>
-                    Benjamin<br>
-                    Fong
+                <h1 aria-label="Benjamin Fong">
+                    <span class="name-line">Benjamin</span>
+                    <span class="name-line">Fong</span>
                 </h1>
-
             </div>
-
-
 
             <div class="hero-footer">
-
                 <div class="hero-intro">
-
-                    <h2>
-                        Technology & Quantitative Search
-                    </h2>
-
-                    <p class="sector">
-                        Financial Markets · Hong Kong · APAC
-                    </p>
-
+                    <h2>Technology &amp; Quantitative Search</h2>
+                    <p class="sector">Financial Markets · Hong Kong · APAC</p>
                     <p class="description">
-                        Connecting exceptional technology
-                        and quantitative talent with leading
-                        financial institutions across
-                        Asia-Pacific.
+                        Connecting exceptional technology and quantitative talent with leading
+                        financial institutions across Asia-Pacific.
                     </p>
-
                 </div>
-
 
                 <div class="hero-actions">
-
                     <a href="#about">
-                        Explore ↓
+                        Explore <span class="arrow" aria-hidden="true">↓</span>
                     </a>
-
                     <a href="#connect">
-                        Connect →
+                        Connect <span class="arrow" aria-hidden="true">→</span>
                     </a>
-
                 </div>
-
             </div>
-
         </section>
-
     </main>
-
-
 </body>
-
 </html>
