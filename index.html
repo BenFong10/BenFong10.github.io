@@ -587,7 +587,9 @@
             padding-left: clamp(10px, 2vw, 34px);
         }
 
-        .about-copy .mini-label {
+        .about-copy .mini-label,
+        .expertise-intro .mini-label,
+        .experience-intro .mini-label {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -599,7 +601,9 @@
             text-transform: uppercase;
         }
 
-        .about-copy .mini-label::before {
+        .about-copy .mini-label::before,
+        .expertise-intro .mini-label::before,
+        .experience-intro .mini-label::before {
             content: "";
             width: 30px;
             height: 1px;
@@ -717,25 +721,6 @@
             position: sticky;
             top: 145px;
             padding-top: 5px;
-        }
-
-        .expertise-intro .mini-label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 28px;
-            color: var(--accent);
-            font-size: 8px;
-            font-weight: 700;
-            letter-spacing: .21em;
-            text-transform: uppercase;
-        }
-
-        .expertise-intro .mini-label::before {
-            content: "";
-            width: 31px;
-            height: 1px;
-            background: var(--accent);
         }
 
         .expertise-intro h2 {
@@ -873,6 +858,265 @@
             transform: rotate(0deg) translateX(2px);
         }
 
+        /* EXPERIENCE */
+
+        .experience {
+            position: relative;
+            min-height: 100svh;
+            scroll-margin-top: 82px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 75% 22%, rgba(183,154,108,.08), transparent 24%),
+                linear-gradient(180deg, #11100e 0%, #0d0d0e 46%, #090a0d 100%);
+            border-top: 1px solid rgba(242,238,230,.08);
+        }
+
+        .experience::before {
+            content: "BAH";
+            position: absolute;
+            right: -.03em;
+            top: 14%;
+            z-index: 0;
+            color: rgba(242,238,230,.018);
+            font-size: clamp(220px, 34vw, 560px);
+            font-weight: 650;
+            line-height: .78;
+            letter-spacing: -.1em;
+            pointer-events: none;
+        }
+
+        .experience-inner {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: var(--max-width);
+            min-height: 100svh;
+            margin: 0 auto;
+            padding: clamp(135px, 14vh, 180px) var(--page-pad) 70px;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: clamp(58px, 8vh, 92px);
+        }
+
+        .experience-layout {
+            display: grid;
+            grid-template-columns: minmax(310px, .72fr) minmax(0, 1.28fr);
+            gap: clamp(70px, 10vw, 170px);
+            align-items: start;
+        }
+
+        .experience-intro {
+            position: sticky;
+            top: 145px;
+        }
+
+        .experience-company {
+            margin-bottom: 18px;
+            font-size: clamp(54px, 6.4vw, 108px);
+            font-weight: 430;
+            line-height: .88;
+            letter-spacing: -.066em;
+            text-transform: uppercase;
+        }
+
+        .experience-company span {
+            display: block;
+            color: rgba(242,238,230,.43);
+        }
+
+        .experience-span {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            color: var(--accent);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .experience-span::after {
+            content: "";
+            width: 36px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .experience-summary {
+            max-width: 500px;
+            color: var(--ink-soft);
+            font-size: clamp(14px, 1vw, 17px);
+            line-height: 1.72;
+            letter-spacing: -.012em;
+        }
+
+        .timeline {
+            position: relative;
+            border-top: 1px solid var(--rule);
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), rgba(183,154,108,.15));
+        }
+
+        .role {
+            position: relative;
+            display: grid;
+            grid-template-columns: 50px minmax(190px, .72fr) minmax(250px, 1.28fr);
+            gap: 28px;
+            min-height: 210px;
+            padding: 34px 0;
+            border-bottom: 1px solid var(--rule);
+            isolation: isolate;
+        }
+
+        .role::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(90deg, rgba(183,154,108,.09), rgba(183,154,108,.015) 54%, transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 700ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .role:hover::before {
+            transform: scaleX(1);
+        }
+
+        .role-marker {
+            position: relative;
+            padding-top: 7px;
+        }
+
+        .role-marker::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            width: 11px;
+            height: 11px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            background: #0d0d0e;
+            box-shadow: 0 0 0 5px rgba(183,154,108,.035), 0 0 24px rgba(183,154,108,.12);
+        }
+
+        .role-current .role-marker::after {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 14px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .role-period {
+            padding-top: 4px;
+        }
+
+        .role-period .years {
+            display: block;
+            margin-bottom: 13px;
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .role-period .place {
+            display: block;
+            color: var(--ink-faint);
+            font-size: 9px;
+            font-weight: 600;
+            line-height: 1.55;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .role-content {
+            padding-right: 20px;
+        }
+
+        .role-status {
+            margin-bottom: 13px;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        .role-current .role-status {
+            color: var(--accent);
+        }
+
+        .role-title {
+            margin-bottom: 18px;
+            font-size: clamp(28px, 3.2vw, 52px);
+            font-weight: 420;
+            line-height: 1;
+            letter-spacing: -.05em;
+            transition: transform 500ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .role:hover .role-title {
+            transform: translateX(8px);
+        }
+
+        .role-copy {
+            max-width: 680px;
+            color: var(--ink-soft);
+            font-size: clamp(13px, .95vw, 15.5px);
+            line-height: 1.68;
+            letter-spacing: -.01em;
+        }
+
+        .experience-footer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-top: 34px;
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .experience-foot-item {
+            min-height: 96px;
+            padding: 22px 24px 20px 0;
+        }
+
+        .experience-foot-item + .experience-foot-item {
+            padding-left: 28px;
+            border-left: 1px solid var(--rule);
+        }
+
+        .experience-foot-label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .experience-foot-value {
+            font-size: clamp(15px, 1.2vw, 19px);
+            font-weight: 430;
+            letter-spacing: -.025em;
+        }
+
         /* DECORATIVE LIGHT */
 
         .orb {
@@ -938,14 +1182,16 @@
                 padding-left: 0;
             }
 
-            .expertise-layout {
+            .expertise-layout,
+            .experience-layout {
                 grid-template-columns: 1fr;
                 gap: 54px;
             }
 
-            .expertise-intro {
+            .expertise-intro,
+            .experience-intro {
                 position: static;
-                max-width: 740px;
+                max-width: 760px;
             }
 
             .expertise-row {
@@ -981,6 +1227,32 @@
             .expertise-arrow {
                 grid-column: 3;
                 grid-row: 1;
+            }
+
+            .role {
+                grid-template-columns: 42px 1fr;
+                gap: 20px;
+            }
+
+            .role-period {
+                grid-column: 2;
+            }
+
+            .role-content {
+                grid-column: 2;
+                padding-right: 0;
+            }
+
+            .timeline::before {
+                left: 13px;
+            }
+
+            .role-marker::before {
+                left: 8px;
+            }
+
+            .role-current .role-marker::after {
+                left: 12px;
             }
         }
 
@@ -1057,7 +1329,8 @@
             }
 
             .about-inner,
-            .expertise-inner {
+            .expertise-inner,
+            .experience-inner {
                 min-height: auto;
                 padding-top: 118px;
                 padding-bottom: 44px;
@@ -1115,7 +1388,8 @@
                 font-size: 85vw;
             }
 
-            .expertise-layout {
+            .expertise-layout,
+            .experience-layout {
                 gap: 42px;
             }
 
@@ -1162,6 +1436,68 @@
             .expertise::before {
                 bottom: .01em;
                 font-size: 28vw;
+            }
+
+            .experience-company {
+                max-width: 330px;
+                font-size: clamp(52px, 16vw, 76px);
+            }
+
+            .experience-summary {
+                font-size: 15px;
+            }
+
+            .role {
+                min-height: 0;
+                padding: 28px 0 32px;
+                grid-template-columns: 32px 1fr;
+                gap: 14px;
+            }
+
+            .timeline::before {
+                left: 10px;
+            }
+
+            .role-marker::before {
+                left: 5px;
+                width: 10px;
+                height: 10px;
+            }
+
+            .role-current .role-marker::after {
+                left: 8px;
+                top: 13px;
+                width: 4px;
+                height: 4px;
+            }
+
+            .role-title {
+                font-size: clamp(28px, 8.2vw, 38px);
+            }
+
+            .role-copy {
+                font-size: 14px;
+            }
+
+            .experience-footer {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-foot-item {
+                min-height: 86px;
+                padding: 20px 0;
+            }
+
+            .experience-foot-item + .experience-foot-item {
+                padding-left: 0;
+                border-left: 0;
+                border-top: 1px solid var(--rule);
+            }
+
+            .experience::before {
+                top: 30%;
+                right: -.08em;
+                font-size: 65vw;
             }
         }
 
@@ -1364,6 +1700,81 @@
                                     <span class="expertise-arrow" aria-hidden="true">→</span>
                                 </div>
                             </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="experience" id="experience" aria-labelledby="experience-heading">
+                <div class="experience-inner">
+                    <div class="section-meta reveal">
+                        <div class="section-id">
+                            <strong>04</strong>
+                            <span>/ Experience</span>
+                        </div>
+                        <div class="section-meta-right">BAH Partners · Hong Kong &amp; Singapore</div>
+                    </div>
+
+                    <div class="experience-layout">
+                        <div class="experience-intro reveal" style="--delay: 70ms;">
+                            <div class="mini-label">Current Firm</div>
+                            <h2 class="experience-company" id="experience-heading">
+                                BAH
+                                <span>Partners</span>
+                            </h2>
+                            <div class="experience-span">2018 — Present</div>
+                            <p class="experience-summary">
+                                Technology and quantitative search across financial markets in Asia-Pacific, with exposure to investment banks, hedge funds, proprietary trading firms, FinTech and digital assets.
+                            </p>
+                        </div>
+
+                        <div class="reveal" style="--delay: 160ms;">
+                            <div class="timeline">
+                                <article class="role role-current">
+                                    <div class="role-marker" aria-hidden="true"></div>
+                                    <div class="role-period">
+                                        <span class="years">Jul 2023 — Present</span>
+                                        <span class="place">Hong Kong</span>
+                                    </div>
+                                    <div class="role-content">
+                                        <div class="role-status">Current Role</div>
+                                        <h3 class="role-title">Associate Director</h3>
+                                        <p class="role-copy">
+                                            Specialist technology and quantitative recruitment across financial markets, working across complex and high-value search mandates throughout Asia-Pacific.
+                                        </p>
+                                    </div>
+                                </article>
+
+                                <article class="role">
+                                    <div class="role-marker" aria-hidden="true"></div>
+                                    <div class="role-period">
+                                        <span class="years">Jun 2018 — Jul 2023</span>
+                                        <span class="place">Hong Kong<br>&amp; Singapore</span>
+                                    </div>
+                                    <div class="role-content">
+                                        <div class="role-status">Previous Role</div>
+                                        <h3 class="role-title">Lead Consultant</h3>
+                                        <p class="role-copy">
+                                            Focused on specialist technology recruitment across banking, trading, FinTech and related financial-services markets in Hong Kong and Singapore.
+                                        </p>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <div class="experience-footer">
+                                <div class="experience-foot-item">
+                                    <span class="experience-foot-label">Firm</span>
+                                    <span class="experience-foot-value">BAH Partners</span>
+                                </div>
+                                <div class="experience-foot-item">
+                                    <span class="experience-foot-label">Primary Base</span>
+                                    <span class="experience-foot-value">Hong Kong</span>
+                                </div>
+                                <div class="experience-foot-item">
+                                    <span class="experience-foot-label">Regional Scope</span>
+                                    <span class="experience-foot-value">Asia-Pacific</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
