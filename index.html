@@ -78,7 +78,7 @@
         .section-jump.is-visible { opacity:1; transform:scale(1); }
 
         /* GLOBAL MOTION */
-        .motion-section { --sx:65%; --sy:30%; position:relative; isolation:isolate; overflow:hidden; scroll-margin-top:78px; }
+        .motion-section { --sx:65%; --sy:30%; position:relative; isolation:isolate; overflow:hidden; scroll-margin-top:0; }
         .motion-section::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(circle 185px at var(--sx) var(--sy),rgba(184,154,107,.055),transparent 70%),radial-gradient(circle 620px at 14% 84%,rgba(255,255,255,.024),transparent 72%); opacity:.68; transition:opacity 700ms ease; }
         .motion-section.is-current::before { opacity:.82; }
         .motion-section > .hero-inner,.motion-section > .about-inner,.motion-section > .expertise-inner,.motion-section > .experience-inner,.motion-section > .connect-inner { position:relative; z-index:2; }
