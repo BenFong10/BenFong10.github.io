@@ -589,7 +589,8 @@
 
         .about-copy .mini-label,
         .expertise-intro .mini-label,
-        .experience-intro .mini-label {
+        .experience-intro .mini-label,
+        .connect-copy .mini-label {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -603,7 +604,8 @@
 
         .about-copy .mini-label::before,
         .expertise-intro .mini-label::before,
-        .experience-intro .mini-label::before {
+        .experience-intro .mini-label::before,
+        .connect-copy .mini-label::before {
             content: "";
             width: 30px;
             height: 1px;
@@ -1117,6 +1119,229 @@
             letter-spacing: -.025em;
         }
 
+        /* CONNECT */
+
+        .connect {
+            position: relative;
+            min-height: 100svh;
+            scroll-margin-top: 82px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 78% 38%, rgba(183,154,108,.16), transparent 21%),
+                radial-gradient(circle at 25% 75%, rgba(255,255,255,.035), transparent 26%),
+                linear-gradient(160deg, #0b0b0d 0%, #090a0d 58%, #11100e 100%);
+            border-top: 1px solid rgba(242,238,230,.08);
+        }
+
+        .connect::before {
+            content: "05";
+            position: absolute;
+            right: -.04em;
+            bottom: -.16em;
+            z-index: 0;
+            color: rgba(242,238,230,.02);
+            font-size: clamp(270px, 42vw, 720px);
+            font-weight: 650;
+            line-height: .8;
+            letter-spacing: -.1em;
+            pointer-events: none;
+        }
+
+        .connect-inner {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: var(--max-width);
+            min-height: 100svh;
+            margin: 0 auto;
+            padding: clamp(135px, 14vh, 180px) var(--page-pad) 44px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: clamp(64px, 9vh, 110px);
+        }
+
+        .connect-main {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+            gap: clamp(70px, 10vw, 170px);
+            align-items: center;
+        }
+
+        .connect-heading {
+            max-width: 1120px;
+            font-size: clamp(72px, 10vw, 172px);
+            font-weight: 420;
+            line-height: .82;
+            letter-spacing: -.075em;
+            text-transform: uppercase;
+        }
+
+        .connect-heading .soft {
+            display: block;
+            color: rgba(242,238,230,.42);
+        }
+
+        .connect-heading .accent {
+            color: var(--accent);
+        }
+
+        .connect-copy {
+            max-width: 540px;
+            align-self: end;
+            padding-bottom: 10px;
+        }
+
+        .connect-copy p {
+            margin-bottom: 34px;
+            color: var(--ink-soft);
+            font-size: clamp(17px, 1.35vw, 22px);
+            line-height: 1.55;
+            letter-spacing: -.025em;
+        }
+
+        .connect-primary {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+            padding: 12px 0;
+            color: var(--ink);
+            text-decoration: none;
+            font-size: clamp(18px, 1.7vw, 27px);
+            font-weight: 430;
+            letter-spacing: -.035em;
+        }
+
+        .connect-primary::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 4px;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(.34);
+            transform-origin: left;
+            transition: transform 520ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .connect-primary:hover::after,
+        .connect-primary:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        .connect-primary .connect-arrow {
+            color: var(--accent);
+            transition: transform 420ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .connect-primary:hover .connect-arrow,
+        .connect-primary:focus-visible .connect-arrow {
+            transform: translate(5px,-5px);
+        }
+
+        .connect-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .connect-link {
+            position: relative;
+            min-height: 128px;
+            padding: 24px 30px 22px 0;
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            gap: 18px;
+            align-items: center;
+            text-decoration: none;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .connect-link + .connect-link {
+            padding-left: 30px;
+            border-left: 1px solid var(--rule);
+        }
+
+        .connect-link::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(90deg, rgba(183,154,108,.12), rgba(183,154,108,.025) 56%, transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 650ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .connect-link:hover::before,
+        .connect-link:focus-visible::before {
+            transform: scaleX(1);
+        }
+
+        .connect-link-index {
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .2em;
+        }
+
+        .connect-link-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .connect-link-name {
+            font-size: clamp(24px, 2.4vw, 40px);
+            font-weight: 420;
+            letter-spacing: -.045em;
+            transition: transform 450ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .connect-link:hover .connect-link-name,
+        .connect-link:focus-visible .connect-link-name {
+            transform: translateX(8px);
+        }
+
+        .connect-link-arrow {
+            color: var(--accent);
+            font-size: 20px;
+            transition: transform 420ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .connect-link:hover .connect-link-arrow,
+        .connect-link:focus-visible .connect-link-arrow {
+            transform: translate(4px,-4px);
+        }
+
+        .connect-footer {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            gap: 28px;
+            padding-top: 8px;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 650;
+            letter-spacing: .17em;
+            text-transform: uppercase;
+        }
+
+        .connect-footer .center {
+            color: var(--accent);
+        }
+
+        .connect-footer .right {
+            text-align: right;
+        }
+
         /* DECORATIVE LIGHT */
 
         .orb {
@@ -1183,7 +1408,8 @@
             }
 
             .expertise-layout,
-            .experience-layout {
+            .experience-layout,
+            .connect-main {
                 grid-template-columns: 1fr;
                 gap: 54px;
             }
@@ -1196,6 +1422,12 @@
 
             .expertise-row {
                 grid-template-columns: 48px minmax(220px, .9fr) minmax(280px, 1.1fr) 28px;
+            }
+
+            .connect-copy {
+                max-width: 660px;
+                align-self: start;
+                padding-bottom: 0;
             }
         }
 
@@ -1253,6 +1485,16 @@
 
             .role-current .role-marker::after {
                 left: 12px;
+            }
+
+            .connect-links {
+                grid-template-columns: 1fr;
+            }
+
+            .connect-link + .connect-link {
+                padding-left: 0;
+                border-left: 0;
+                border-top: 1px solid var(--rule);
             }
         }
 
@@ -1330,7 +1572,8 @@
 
             .about-inner,
             .expertise-inner,
-            .experience-inner {
+            .experience-inner,
+            .connect-inner {
                 min-height: auto;
                 padding-top: 118px;
                 padding-bottom: 44px;
@@ -1389,7 +1632,8 @@
             }
 
             .expertise-layout,
-            .experience-layout {
+            .experience-layout,
+            .connect-main {
                 gap: 42px;
             }
 
@@ -1498,6 +1742,47 @@
                 top: 30%;
                 right: -.08em;
                 font-size: 65vw;
+            }
+
+            .connect-heading {
+                max-width: 370px;
+                font-size: clamp(64px, 19vw, 92px);
+            }
+
+            .connect-copy p {
+                margin-bottom: 28px;
+                font-size: 18px;
+            }
+
+            .connect-primary {
+                font-size: 19px;
+            }
+
+            .connect-link {
+                min-height: 112px;
+                grid-template-columns: 36px 1fr auto;
+                gap: 12px;
+                padding: 20px 0;
+            }
+
+            .connect-link-name {
+                font-size: 28px;
+            }
+
+            .connect-footer {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .connect-footer .center,
+            .connect-footer .right {
+                text-align: left;
+            }
+
+            .connect::before {
+                right: -.08em;
+                bottom: -.03em;
+                font-size: 82vw;
             }
         }
 
@@ -1776,6 +2061,66 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="connect" id="connect" aria-labelledby="connect-heading">
+                <div class="connect-inner">
+                    <div class="section-meta reveal">
+                        <div class="section-id">
+                            <strong>05</strong>
+                            <span>/ Connect</span>
+                        </div>
+                        <div class="section-meta-right">Hong Kong · Asia-Pacific</div>
+                    </div>
+
+                    <div class="connect-main">
+                        <div class="reveal" style="--delay: 70ms;">
+                            <h2 class="connect-heading" id="connect-heading">
+                                Let's
+                                <span class="soft">connect<span class="accent">.</span></span>
+                            </h2>
+                        </div>
+
+                        <div class="connect-copy reveal" style="--delay: 170ms;">
+                            <div class="mini-label">Start a Conversation</div>
+                            <p>
+                                Always interested in conversations around technology, quantitative markets, specialist talent and the future of recruitment across Asia-Pacific.
+                            </p>
+                            <a class="connect-primary" href="https://www.linkedin.com/in/fongbenjamin" target="_blank" rel="noopener noreferrer">
+                                Connect on LinkedIn
+                                <span class="connect-arrow" aria-hidden="true">↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="connect-links reveal" style="--delay: 250ms;">
+                            <a class="connect-link" href="https://www.linkedin.com/in/fongbenjamin" target="_blank" rel="noopener noreferrer" aria-label="Open Benjamin Fong's LinkedIn profile">
+                                <span class="connect-link-index">01</span>
+                                <span>
+                                    <span class="connect-link-label">Professional</span>
+                                    <span class="connect-link-name">LinkedIn</span>
+                                </span>
+                                <span class="connect-link-arrow" aria-hidden="true">↗</span>
+                            </a>
+
+                            <a class="connect-link" href="https://github.com/BenFong10" target="_blank" rel="noopener noreferrer" aria-label="Open Benjamin Fong's GitHub profile">
+                                <span class="connect-link-index">02</span>
+                                <span>
+                                    <span class="connect-link-label">Build</span>
+                                    <span class="connect-link-name">GitHub</span>
+                                </span>
+                                <span class="connect-link-arrow" aria-hidden="true">↗</span>
+                            </a>
+                        </div>
+
+                        <footer class="connect-footer reveal" style="--delay: 320ms;">
+                            <span>Benjamin Fong</span>
+                            <span class="center">Technology · Quantitative · Search</span>
+                            <span class="right">Hong Kong · APAC</span>
+                        </footer>
                     </div>
                 </div>
             </section>
