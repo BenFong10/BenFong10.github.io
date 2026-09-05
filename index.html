@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Benjamin Fong — Technology & Quantitative Search across financial markets in Hong Kong and APAC.">
+    <meta name="theme-color" content="#090a0d">
     <title>Benjamin Fong | Technology & Quantitative Search</title>
 
     <style>
         :root {
-            --bg: #f2f0eb;
-            --ink: #0a0a0a;
-            --muted: rgba(10, 10, 10, 0.48);
-            --rule: rgba(10, 10, 10, 0.16);
-            --page-pad: clamp(24px, 4.1vw, 64px);
-            --max-width: 1680px;
+            --bg: #090a0d;
+            --bg-soft: #0e1014;
+            --ink: #f2eee6;
+            --ink-soft: rgba(242, 238, 230, 0.62);
+            --ink-faint: rgba(242, 238, 230, 0.34);
+            --rule: rgba(242, 238, 230, 0.16);
+            --accent: #b79a6c;
+            --page-pad: clamp(24px, 4.2vw, 70px);
+            --max-width: 1780px;
+            --mx: 68%;
+            --my: 28%;
         }
 
         * {
@@ -24,88 +30,143 @@
 
         html {
             scroll-behavior: smooth;
+            background: var(--bg);
         }
 
         body {
             min-height: 100vh;
             overflow-x: hidden;
-            background: var(--bg);
+            background:
+                radial-gradient(circle at var(--mx) var(--my), rgba(183,154,108,.12), transparent 24%),
+                radial-gradient(circle at 18% 78%, rgba(255,255,255,.035), transparent 28%),
+                linear-gradient(145deg, #0b0c10 0%, #090a0d 56%, #08090c 100%);
             color: var(--ink);
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
         }
 
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: .23;
+            background-image:
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+            background-size: 88px 88px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 88%);
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: .045;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+            mix-blend-mode: soft-light;
+        }
+
         a {
             color: inherit;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: #090a0d;
+        }
+
+        .site-shell {
+            position: relative;
+            z-index: 2;
+            min-height: 100svh;
         }
 
         /* NAVIGATION */
 
         .navbar {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 50%;
             z-index: 20;
             width: 100%;
             max-width: var(--max-width);
-            padding: 31px var(--page-pad);
+            padding: 30px var(--page-pad) 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transform: translateX(-50%);
             opacity: 0;
-            animation: fade-down 700ms cubic-bezier(.22,.61,.36,1) 80ms forwards;
+            animation: nav-in 800ms cubic-bezier(.16,1,.3,1) 90ms forwards;
+        }
+
+        .navbar::after {
+            content: "";
+            position: absolute;
+            left: var(--page-pad);
+            right: var(--page-pad);
+            bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(242,238,230,.12) 20%, rgba(242,238,230,.12) 80%, transparent);
+            opacity: .55;
         }
 
         .logo {
-            position: relative;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
-            font-size: 17px;
-            font-weight: 650;
-            letter-spacing: -0.045em;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.04em;
         }
 
-        .logo::after {
-            content: "";
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: currentColor;
-            opacity: 0.38;
-            transform: translateY(-1px);
+        .logo-mark {
+            width: 7px;
+            height: 7px;
+            border: 1px solid var(--accent);
+            transform: rotate(45deg);
+            box-shadow: 0 0 22px rgba(183,154,108,.28);
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: clamp(24px, 2.5vw, 40px);
+            gap: clamp(24px, 2.55vw, 44px);
         }
 
         .nav-links a {
             position: relative;
-            padding: 4px 0;
+            padding: 6px 0;
             text-decoration: none;
-            font-size: 11px;
+            color: var(--ink-soft);
+            font-size: 10px;
             font-weight: 600;
-            letter-spacing: 0.13em;
+            letter-spacing: .17em;
             text-transform: uppercase;
+            transition: color 240ms ease;
         }
 
         .nav-links a::after {
             content: "";
             position: absolute;
             left: 0;
-            bottom: -3px;
+            bottom: 0;
             width: 100%;
             height: 1px;
-            background: currentColor;
+            background: var(--accent);
             transform: scaleX(0);
             transform-origin: right;
-            transition: transform 320ms cubic-bezier(.22,.61,.36,1);
+            transition: transform 320ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            color: var(--ink);
         }
 
         .nav-links a:hover::after,
@@ -117,98 +178,193 @@
         /* HERO */
 
         .hero {
+            position: relative;
             width: 100%;
             max-width: var(--max-width);
             min-height: 100svh;
             margin: 0 auto;
-            padding: 143px var(--page-pad) 42px;
-            display: flex;
-            flex-direction: column;
+            padding: 125px var(--page-pad) 42px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
         }
 
-        .hero-top {
-            display: flex;
-            justify-content: flex-end;
+        .hero-meta {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            gap: 24px;
             opacity: 0;
-            animation: fade-in 700ms ease 280ms forwards;
+            animation: fade-up 800ms cubic-bezier(.16,1,.3,1) 260ms forwards;
         }
 
-        .eyebrow {
-            font-size: 10px;
+        .kicker {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: var(--ink-faint);
+            font-size: 9px;
             font-weight: 600;
-            line-height: 1;
-            letter-spacing: 0.18em;
+            letter-spacing: .21em;
             text-transform: uppercase;
-            color: var(--muted);
-            white-space: nowrap;
+        }
+
+        .kicker::before {
+            content: "";
+            width: 32px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .meta-right {
+            display: grid;
+            gap: 7px;
+            text-align: right;
+            color: var(--ink-faint);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .meta-right .page-count {
+            color: var(--accent);
         }
 
         /* NAME */
 
+        .hero-center {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 0;
+            padding: clamp(70px, 9vh, 120px) 0 clamp(54px, 7vh, 90px);
+        }
+
         .hero-name {
-            margin-top: clamp(145px, 18vh, 225px);
-            margin-bottom: clamp(44px, 6vh, 74px);
+            position: relative;
+            width: 100%;
+            will-change: transform;
+            transition: transform 140ms linear;
         }
 
         .hero-name h1 {
-            font-size: clamp(76px, 13.2vw, 218px);
-            font-weight: 450;
-            line-height: 0.765;
-            letter-spacing: -0.078em;
+            width: fit-content;
+            font-size: clamp(76px, 13.4vw, 226px);
+            font-weight: 430;
+            line-height: .76;
+            letter-spacing: -.078em;
             text-transform: uppercase;
         }
 
         .name-line {
             display: block;
             opacity: 0;
-            transform: translateY(42px);
-            animation: name-rise 900ms cubic-bezier(.16,1,.3,1) forwards;
+            transform: translateY(52px);
+            animation: name-in 1050ms cubic-bezier(.16,1,.3,1) forwards;
         }
 
         .name-line:first-child {
-            animation-delay: 150ms;
+            color: rgba(242,238,230,.72);
+            animation-delay: 160ms;
         }
 
         .name-line:last-child {
-            animation-delay: 250ms;
+            color: var(--ink);
+            animation-delay: 275ms;
+        }
+
+        .name-line:last-child::after {
+            content: ".";
+            color: var(--accent);
+            padding-left: .02em;
+        }
+
+        .side-note {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(-50%) rotate(90deg) translateX(50%);
+            transform-origin: right center;
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fade-in 800ms ease 650ms forwards;
+        }
+
+        .side-note::before {
+            content: "";
+            width: 42px;
+            height: 1px;
+            background: var(--rule);
         }
 
         /* HERO FOOTER */
 
         .hero-footer {
-            margin-top: auto;
-            padding-top: 27px;
+            position: relative;
+            padding-top: 26px;
             border-top: 1px solid var(--rule);
             display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
-            gap: clamp(48px, 8vw, 130px);
+            grid-template-columns: minmax(0, 1.2fr) minmax(340px, .8fr);
+            gap: clamp(60px, 8vw, 140px);
             align-items: end;
             opacity: 0;
-            transform: translateY(18px);
-            animation: footer-rise 750ms cubic-bezier(.22,.61,.36,1) 520ms forwards;
+            transform: translateY(24px);
+            animation: fade-up 850ms cubic-bezier(.16,1,.3,1) 560ms forwards;
         }
 
-        .hero-intro h2 {
-            margin-bottom: 7px;
-            font-size: clamp(18px, 1.55vw, 24px);
-            font-weight: 500;
-            line-height: 1.12;
-            letter-spacing: -0.035em;
+        .hero-copy {
+            display: grid;
+            grid-template-columns: minmax(220px, .55fr) minmax(300px, 1fr);
+            gap: clamp(38px, 5vw, 88px);
+            align-items: start;
+        }
+
+        .hero-title-wrap {
+            padding-right: 12px;
+        }
+
+        .hero-title-wrap .label {
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: clamp(19px, 1.6vw, 27px);
+            font-weight: 450;
+            line-height: 1.08;
+            letter-spacing: -.035em;
+        }
+
+        .hero-detail {
+            padding-top: 1px;
         }
 
         .sector {
-            margin-bottom: 23px;
-            color: var(--muted);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.045em;
+            margin-bottom: 18px;
+            color: var(--ink-faint);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .13em;
+            text-transform: uppercase;
         }
 
         .description {
-            max-width: 610px;
-            font-size: clamp(15px, 1.05vw, 17px);
-            line-height: 1.58;
-            letter-spacing: -0.018em;
+            max-width: 620px;
+            color: var(--ink-soft);
+            font-size: clamp(14px, 1vw, 17px);
+            line-height: 1.62;
+            letter-spacing: -.014em;
         }
 
         /* ACTIONS */
@@ -217,31 +373,54 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: clamp(28px, 3.4vw, 52px);
+            gap: clamp(24px, 3vw, 48px);
             padding-bottom: 2px;
         }
 
         .hero-actions a {
+            position: relative;
             display: inline-flex;
             align-items: center;
-            gap: 9px;
+            gap: 10px;
+            padding: 11px 0;
             text-decoration: none;
-            font-size: 10px;
-            font-weight: 650;
-            letter-spacing: 0.16em;
+            color: var(--ink-soft);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .18em;
             text-transform: uppercase;
+            transition: color 220ms ease;
         }
 
-        .hero-actions .arrow {
-            display: inline-block;
+        .hero-actions a::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 5px;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 320ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .hero-actions a:hover,
+        .hero-actions a:focus-visible {
+            color: var(--ink);
+        }
+
+        .hero-actions a:hover::before,
+        .hero-actions a:focus-visible::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .arrow {
+            color: var(--accent);
             font-size: 13px;
             line-height: 1;
-            transition: transform 300ms cubic-bezier(.22,.61,.36,1);
-        }
-
-        .hero-actions a:hover .arrow,
-        .hero-actions a:focus-visible .arrow {
-            transform: translateX(4px);
+            transition: transform 280ms cubic-bezier(.16,1,.3,1);
         }
 
         .hero-actions a:first-child:hover .arrow,
@@ -249,48 +428,53 @@
             transform: translateY(4px);
         }
 
-        /* MOTION */
-
-        @keyframes name-rise {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .hero-actions a:last-child:hover .arrow,
+        .hero-actions a:last-child:focus-visible .arrow {
+            transform: translate(3px,-3px);
         }
 
-        @keyframes fade-down {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -10px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
+        /* DECORATIVE LIGHT */
+
+        .orb {
+            position: fixed;
+            left: var(--mx);
+            top: var(--my);
+            z-index: 0;
+            width: 26vw;
+            height: 26vw;
+            min-width: 280px;
+            min-height: 280px;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%,-50%);
+            background: radial-gradient(circle, rgba(183,154,108,.09), rgba(183,154,108,.025) 38%, transparent 70%);
+            filter: blur(18px);
+            opacity: .75;
+        }
+
+        /* MOTION */
+
+        @keyframes nav-in {
+            from { opacity: 0; transform: translate(-50%,-10px); }
+            to   { opacity: 1; transform: translate(-50%,0); }
+        }
+
+        @keyframes name-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fade-in {
             to { opacity: 1; }
         }
 
-        @keyframes footer-rise {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         /* TABLET */
 
-        @media (max-width: 980px) {
-            .hero {
-                padding-top: 128px;
-            }
-
-            .hero-name {
-                margin-top: clamp(150px, 20vh, 210px);
-            }
-
+        @media (max-width: 1100px) {
             .hero-footer {
                 grid-template-columns: 1fr;
                 gap: 34px;
@@ -301,6 +485,17 @@
             }
         }
 
+        @media (max-width: 850px) {
+            .hero-copy {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .side-note {
+                display: none;
+            }
+        }
+
         /* MOBILE */
 
         @media (max-width: 700px) {
@@ -308,13 +503,13 @@
                 --page-pad: 22px;
             }
 
-            .navbar {
-                padding-top: 23px;
-                padding-bottom: 23px;
+            body::before {
+                background-size: 58px 58px;
             }
 
-            .nav-links {
-                gap: 18px;
+            .navbar {
+                padding-top: 22px;
+                padding-bottom: 18px;
             }
 
             .nav-links a:not(:last-child) {
@@ -322,42 +517,40 @@
             }
 
             .hero {
-                min-height: 100svh;
-                padding-top: 105px;
-                padding-bottom: 28px;
+                padding-top: 98px;
+                padding-bottom: 26px;
             }
 
-            .hero-top {
-                justify-content: flex-start;
+            .hero-meta {
+                grid-template-columns: 1fr;
             }
 
-            .eyebrow {
-                font-size: 9px;
-                white-space: normal;
+            .meta-right {
+                display: none;
             }
 
-            .hero-name {
-                margin-top: clamp(120px, 18vh, 170px);
-                margin-bottom: 42px;
+            .hero-center {
+                padding: 92px 0 66px;
             }
 
             .hero-name h1 {
-                font-size: clamp(64px, 22vw, 122px);
-                line-height: 0.8;
-                letter-spacing: -0.072em;
+                font-size: clamp(64px, 22vw, 120px);
+                line-height: .8;
+                letter-spacing: -.07em;
             }
 
             .hero-footer {
                 padding-top: 22px;
-                gap: 30px;
+                gap: 26px;
             }
 
-            .hero-intro h2 {
-                font-size: 19px;
+            .hero-copy {
+                gap: 20px;
             }
 
-            .sector {
-                margin-bottom: 18px;
+            .hero-title {
+                max-width: 280px;
+                font-size: 20px;
             }
 
             .description {
@@ -366,7 +559,12 @@
             }
 
             .hero-actions {
-                gap: 30px;
+                gap: 28px;
+            }
+
+            .orb {
+                width: 70vw;
+                height: 70vw;
             }
         }
 
@@ -377,55 +575,121 @@
                 animation-delay: 0ms !important;
                 transition-duration: 0.01ms !important;
             }
+
+            .hero-name {
+                transform: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar" aria-label="Primary navigation">
-        <a href="#home" class="logo" aria-label="Benjamin Fong home">BF</a>
+    <div class="orb" aria-hidden="true"></div>
 
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="#expertise">Expertise</a>
-            <a href="#experience">Experience</a>
-            <a href="#connect">Connect</a>
-        </div>
-    </nav>
+    <div class="site-shell">
+        <nav class="navbar" aria-label="Primary navigation">
+            <a href="#home" class="logo" aria-label="Benjamin Fong home">
+                <span class="logo-mark" aria-hidden="true"></span>
+                <span>BF</span>
+            </a>
 
-    <main>
-        <section class="hero" id="home">
-            <div class="hero-top">
-                <div class="eyebrow">Technology · Quantitative · Search</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#expertise">Expertise</a>
+                <a href="#experience">Experience</a>
+                <a href="#connect">Connect</a>
             </div>
+        </nav>
 
-            <div class="hero-name">
-                <h1 aria-label="Benjamin Fong">
-                    <span class="name-line">Benjamin</span>
-                    <span class="name-line">Fong</span>
-                </h1>
-            </div>
+        <main>
+            <section class="hero" id="home">
+                <div class="hero-meta">
+                    <div class="kicker">Technology · Quantitative · Search</div>
 
-            <div class="hero-footer">
-                <div class="hero-intro">
-                    <h2>Technology &amp; Quantitative Search</h2>
-                    <p class="sector">Financial Markets · Hong Kong · APAC</p>
-                    <p class="description">
-                        Connecting exceptional technology and quantitative talent with leading
-                        financial institutions across Asia-Pacific.
-                    </p>
+                    <div class="meta-right" aria-label="Location and section">
+                        <span>Hong Kong / APAC</span>
+                        <span class="page-count">01 / 05</span>
+                    </div>
                 </div>
 
-                <div class="hero-actions">
-                    <a href="#about">
-                        Explore <span class="arrow" aria-hidden="true">↓</span>
-                    </a>
-                    <a href="#connect">
-                        Connect <span class="arrow" aria-hidden="true">→</span>
-                    </a>
+                <div class="hero-center">
+                    <div class="hero-name" id="heroName">
+                        <h1 aria-label="Benjamin Fong">
+                            <span class="name-line">Benjamin</span>
+                            <span class="name-line">Fong</span>
+                        </h1>
+                    </div>
+
+                    <div class="side-note" aria-hidden="true">Financial Markets · APAC</div>
                 </div>
-            </div>
-        </section>
-    </main>
+
+                <div class="hero-footer">
+                    <div class="hero-copy">
+                        <div class="hero-title-wrap">
+                            <div class="label">Focus</div>
+                            <h2 class="hero-title">Technology &amp;<br>Quantitative Search</h2>
+                        </div>
+
+                        <div class="hero-detail">
+                            <p class="sector">Financial Markets · Hong Kong · APAC</p>
+                            <p class="description">
+                                Connecting exceptional technology and quantitative talent with leading
+                                financial institutions across Asia-Pacific.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="#about">
+                            Explore <span class="arrow" aria-hidden="true">↓</span>
+                        </a>
+                        <a href="#connect">
+                            Connect <span class="arrow" aria-hidden="true">↗</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        (() => {
+            const root = document.documentElement;
+            const heroName = document.getElementById('heroName');
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (reduceMotion || !heroName) return;
+
+            let targetX = 0;
+            let targetY = 0;
+            let currentX = 0;
+            let currentY = 0;
+            let pointerX = window.innerWidth * 0.68;
+            let pointerY = window.innerHeight * 0.28;
+
+            window.addEventListener('pointermove', (event) => {
+                pointerX = event.clientX;
+                pointerY = event.clientY;
+
+                const nx = (event.clientX / window.innerWidth) - 0.5;
+                const ny = (event.clientY / window.innerHeight) - 0.5;
+
+                targetX = nx * 8;
+                targetY = ny * 5;
+
+                root.style.setProperty('--mx', `${event.clientX}px`);
+                root.style.setProperty('--my', `${event.clientY}px`);
+            }, { passive: true });
+
+            const tick = () => {
+                currentX += (targetX - currentX) * 0.075;
+                currentY += (targetY - currentY) * 0.075;
+                heroName.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+                requestAnimationFrame(tick);
+            };
+
+            requestAnimationFrame(tick);
+        })();
+    </script>
 </body>
 </html>
