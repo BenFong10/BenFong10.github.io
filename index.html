@@ -188,6 +188,55 @@
             transform-origin: left;
         }
 
+        /* SHARED */
+
+        .section-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .section-id {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--ink-faint);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .19em;
+            text-transform: uppercase;
+        }
+
+        .section-id strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .section-meta-right {
+            color: var(--ink-faint);
+            font-size: 8px;
+            font-weight: 650;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(26px);
+            transition:
+                opacity 900ms cubic-bezier(.16,1,.3,1),
+                transform 900ms cubic-bezier(.16,1,.3,1);
+            transition-delay: var(--delay, 0ms);
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* HERO */
 
         .hero {
@@ -242,8 +291,6 @@
         .meta-right .page-count {
             color: var(--accent);
         }
-
-        /* NAME */
 
         .hero-center {
             position: relative;
@@ -317,8 +364,6 @@
             background: var(--rule);
         }
 
-        /* HERO FOOTER */
-
         .hero-footer {
             position: relative;
             padding-top: 26px;
@@ -379,8 +424,6 @@
             line-height: 1.62;
             letter-spacing: -.014em;
         }
-
-        /* ACTIONS */
 
         .hero-actions {
             display: flex;
@@ -496,39 +539,6 @@
             display: grid;
             grid-template-rows: auto 1fr auto;
             gap: 70px;
-        }
-
-        .section-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            padding-bottom: 22px;
-            border-bottom: 1px solid var(--rule);
-        }
-
-        .section-id {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--ink-faint);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .19em;
-            text-transform: uppercase;
-        }
-
-        .section-id strong {
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .section-meta-right {
-            color: var(--ink-faint);
-            font-size: 8px;
-            font-weight: 650;
-            letter-spacing: .2em;
-            text-transform: uppercase;
         }
 
         .about-grid {
@@ -655,20 +665,212 @@
             letter-spacing: -.03em;
         }
 
-        /* SCROLL REVEALS */
+        /* EXPERTISE */
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(26px);
-            transition:
-                opacity 900ms cubic-bezier(.16,1,.3,1),
-                transform 900ms cubic-bezier(.16,1,.3,1);
-            transition-delay: var(--delay, 0ms);
+        .expertise {
+            position: relative;
+            min-height: 100svh;
+            scroll-margin-top: 82px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 32%, rgba(183,154,108,.055), transparent 24%),
+                linear-gradient(180deg, #090a0d 0%, #0b0c10 100%);
+            border-top: 1px solid rgba(242,238,230,.08);
         }
 
-        .reveal.is-visible {
-            opacity: 1;
-            transform: translateY(0);
+        .expertise::before {
+            content: "EXPERTISE";
+            position: absolute;
+            left: -.035em;
+            bottom: -.08em;
+            z-index: 0;
+            color: rgba(242,238,230,.018);
+            font-size: clamp(120px, 18vw, 310px);
+            font-weight: 620;
+            line-height: .8;
+            letter-spacing: -.075em;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .expertise-inner {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: var(--max-width);
+            min-height: 100svh;
+            margin: 0 auto;
+            padding: clamp(135px, 14vh, 180px) var(--page-pad) 72px;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: clamp(56px, 8vh, 92px);
+        }
+
+        .expertise-layout {
+            display: grid;
+            grid-template-columns: minmax(280px, .62fr) minmax(0, 1.38fr);
+            gap: clamp(70px, 10vw, 170px);
+            align-items: start;
+        }
+
+        .expertise-intro {
+            position: sticky;
+            top: 145px;
+            padding-top: 5px;
+        }
+
+        .expertise-intro .mini-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .21em;
+            text-transform: uppercase;
+        }
+
+        .expertise-intro .mini-label::before {
+            content: "";
+            width: 31px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .expertise-intro h2 {
+            max-width: 620px;
+            margin-bottom: 30px;
+            font-size: clamp(46px, 5vw, 84px);
+            font-weight: 420;
+            line-height: .94;
+            letter-spacing: -.055em;
+            text-transform: uppercase;
+        }
+
+        .expertise-intro h2 span {
+            color: rgba(242,238,230,.42);
+        }
+
+        .expertise-intro p {
+            max-width: 430px;
+            color: var(--ink-soft);
+            font-size: 15px;
+            line-height: 1.68;
+            letter-spacing: -.012em;
+        }
+
+        .expertise-list {
+            border-top: 1px solid var(--rule);
+        }
+
+        .expertise-item {
+            position: relative;
+            min-height: 154px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--rule);
+            isolation: isolate;
+        }
+
+        .expertise-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            background:
+                linear-gradient(90deg, rgba(183,154,108,.11), rgba(183,154,108,.025) 42%, transparent 75%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 700ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .expertise-item::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 520ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .expertise-item:hover::before,
+        .expertise-item:focus-within::before {
+            transform: scaleX(1);
+        }
+
+        .expertise-item:hover::after,
+        .expertise-item:focus-within::after {
+            transform: scaleY(1);
+        }
+
+        .expertise-row {
+            width: 100%;
+            min-height: 154px;
+            display: grid;
+            grid-template-columns: 56px minmax(250px, .9fr) minmax(300px, 1.1fr) 34px;
+            gap: 26px;
+            align-items: center;
+            padding: 24px 2px 24px 0;
+            color: inherit;
+            text-decoration: none;
+            cursor: default;
+        }
+
+        .expertise-index {
+            align-self: start;
+            padding-top: 9px;
+            color: var(--accent);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .2em;
+        }
+
+        .expertise-name {
+            font-size: clamp(28px, 3.1vw, 52px);
+            font-weight: 420;
+            line-height: .98;
+            letter-spacing: -.052em;
+            transition: transform 500ms cubic-bezier(.16,1,.3,1), color 280ms ease;
+        }
+
+        .expertise-item:hover .expertise-name,
+        .expertise-item:focus-within .expertise-name {
+            transform: translateX(12px);
+            color: #fffaf1;
+        }
+
+        .expertise-detail {
+            max-width: 620px;
+            color: var(--ink-soft);
+            font-size: clamp(13px, .95vw, 15.5px);
+            line-height: 1.65;
+            letter-spacing: -.01em;
+            transition: color 280ms ease, transform 500ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .expertise-item:hover .expertise-detail,
+        .expertise-item:focus-within .expertise-detail {
+            color: rgba(242,238,230,.82);
+            transform: translateX(6px);
+        }
+
+        .expertise-arrow {
+            color: var(--ink-faint);
+            font-size: 20px;
+            line-height: 1;
+            transform: rotate(-45deg);
+            transition: color 280ms ease, transform 500ms cubic-bezier(.16,1,.3,1);
+        }
+
+        .expertise-item:hover .expertise-arrow,
+        .expertise-item:focus-within .expertise-arrow {
+            color: var(--accent);
+            transform: rotate(0deg) translateX(2px);
         }
 
         /* DECORATIVE LIGHT */
@@ -735,6 +937,20 @@
                 max-width: 760px;
                 padding-left: 0;
             }
+
+            .expertise-layout {
+                grid-template-columns: 1fr;
+                gap: 54px;
+            }
+
+            .expertise-intro {
+                position: static;
+                max-width: 740px;
+            }
+
+            .expertise-row {
+                grid-template-columns: 48px minmax(220px, .9fr) minmax(280px, 1.1fr) 28px;
+            }
         }
 
         @media (max-width: 850px) {
@@ -745,6 +961,26 @@
 
             .side-note {
                 display: none;
+            }
+
+            .expertise-row {
+                grid-template-columns: 44px 1fr 24px;
+                gap: 18px;
+                min-height: 166px;
+            }
+
+            .expertise-name {
+                grid-column: 2;
+            }
+
+            .expertise-detail {
+                grid-column: 2 / 4;
+                margin-top: -8px;
+            }
+
+            .expertise-arrow {
+                grid-column: 3;
+                grid-row: 1;
             }
         }
 
@@ -820,7 +1056,8 @@
                 height: 70vw;
             }
 
-            .about-inner {
+            .about-inner,
+            .expertise-inner {
                 min-height: auto;
                 padding-top: 118px;
                 padding-bottom: 44px;
@@ -876,6 +1113,55 @@
                 right: -.06em;
                 bottom: -.08em;
                 font-size: 85vw;
+            }
+
+            .expertise-layout {
+                gap: 42px;
+            }
+
+            .expertise-intro h2 {
+                max-width: 350px;
+                font-size: clamp(44px, 13.2vw, 68px);
+            }
+
+            .expertise-intro p {
+                font-size: 14px;
+            }
+
+            .expertise-row {
+                min-height: 176px;
+                grid-template-columns: 36px 1fr 22px;
+                gap: 12px;
+                padding: 22px 0;
+            }
+
+            .expertise-index {
+                padding-top: 5px;
+            }
+
+            .expertise-name {
+                font-size: clamp(25px, 8vw, 36px);
+            }
+
+            .expertise-detail {
+                grid-column: 2 / 4;
+                font-size: 14px;
+                line-height: 1.58;
+                margin-top: -2px;
+            }
+
+            .expertise-arrow {
+                font-size: 17px;
+            }
+
+            .expertise-item::before {
+                transform: scaleX(1);
+                opacity: .28;
+            }
+
+            .expertise::before {
+                bottom: .01em;
+                font-size: 28vw;
             }
         }
 
@@ -1018,6 +1304,70 @@
                     </div>
                 </div>
             </section>
+
+            <section class="expertise" id="expertise" aria-labelledby="expertise-heading">
+                <div class="expertise-inner">
+                    <div class="section-meta reveal">
+                        <div class="section-id">
+                            <strong>03</strong>
+                            <span>/ Expertise</span>
+                        </div>
+                        <div class="section-meta-right">Specialist Search · APAC</div>
+                    </div>
+
+                    <div class="expertise-layout">
+                        <div class="expertise-intro reveal" style="--delay: 70ms;">
+                            <div class="mini-label">Coverage</div>
+                            <h2 id="expertise-heading">
+                                Specialist search<br>
+                                <span>across technology</span><br>
+                                &amp; markets.
+                            </h2>
+                            <p>
+                                Focused on specialist technology and quantitative talent across financial institutions, trading firms and emerging financial markets in Asia-Pacific.
+                            </p>
+                        </div>
+
+                        <div class="expertise-list reveal" style="--delay: 160ms;">
+                            <article class="expertise-item">
+                                <div class="expertise-row">
+                                    <span class="expertise-index">01</span>
+                                    <h3 class="expertise-name">Trading Technology</h3>
+                                    <p class="expertise-detail">Electronic trading, low-latency systems, front-office engineering and trading infrastructure.</p>
+                                    <span class="expertise-arrow" aria-hidden="true">→</span>
+                                </div>
+                            </article>
+
+                            <article class="expertise-item">
+                                <div class="expertise-row">
+                                    <span class="expertise-index">02</span>
+                                    <h3 class="expertise-name">Quantitative</h3>
+                                    <p class="expertise-detail">Quantitative researchers, developers, traders and analysts across systematic and electronic markets.</p>
+                                    <span class="expertise-arrow" aria-hidden="true">→</span>
+                                </div>
+                            </article>
+
+                            <article class="expertise-item">
+                                <div class="expertise-row">
+                                    <span class="expertise-index">03</span>
+                                    <h3 class="expertise-name">Engineering &amp; Infrastructure</h3>
+                                    <p class="expertise-detail">Software engineering, DevOps, SRE, infrastructure and production technology supporting critical financial platforms.</p>
+                                    <span class="expertise-arrow" aria-hidden="true">→</span>
+                                </div>
+                            </article>
+
+                            <article class="expertise-item">
+                                <div class="expertise-row">
+                                    <span class="expertise-index">04</span>
+                                    <h3 class="expertise-name">FinTech &amp; Digital Assets</h3>
+                                    <p class="expertise-detail">Technology and quantitative talent across FinTech, cryptocurrency, blockchain and digital-asset markets.</p>
+                                    <span class="expertise-arrow" aria-hidden="true">→</span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -1074,17 +1424,28 @@
                 revealItems.forEach(item => revealObserver.observe(item));
             }
 
-            const aboutSection = document.getElementById('about');
-            const aboutNav = document.querySelector('[data-nav="about"]');
+            const navLinks = [...document.querySelectorAll('[data-nav]')];
+            const trackedSections = navLinks
+                .map(link => document.getElementById(link.dataset.nav))
+                .filter(Boolean);
 
-            if (aboutSection && aboutNav && 'IntersectionObserver' in window) {
-                const navObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        aboutNav.classList.toggle('is-active', entry.isIntersecting && entry.intersectionRatio > 0.28);
+            if ('IntersectionObserver' in window && trackedSections.length) {
+                const sectionObserver = new IntersectionObserver((entries) => {
+                    const visible = entries
+                        .filter(entry => entry.isIntersecting)
+                        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+                    if (!visible) return;
+
+                    navLinks.forEach(link => {
+                        link.classList.toggle('is-active', link.dataset.nav === visible.target.id);
                     });
-                }, { threshold: [0.28, 0.55] });
+                }, {
+                    threshold: [0.28, 0.42, 0.58],
+                    rootMargin: '-15% 0px -35% 0px'
+                });
 
-                navObserver.observe(aboutSection);
+                trackedSections.forEach(section => sectionObserver.observe(section));
             }
         })();
     </script>
