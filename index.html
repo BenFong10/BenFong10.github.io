@@ -143,28 +143,7 @@
         .loader-line { width: 86px; height: 1px; overflow: hidden; background: rgba(243,239,231,.12); }
         .loader-line::after { content:""; display:block; width:100%; height:100%; background:var(--accent); transform:translateX(-100%); animation:loader-line 950ms cubic-bezier(.16,1,.3,1) forwards; }
 
-        .cursor-ring {
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 240;
-            width: 26px;
-            height: 26px;
-            border: 1px solid rgba(184,154,107,.55);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transform: translate3d(-50%,-50%,0);
-            transition: width 220ms ease, height 220ms ease, border-color 220ms ease, opacity 220ms ease, background 220ms ease;
-            mix-blend-mode: screen;
-        }
-        .cursor-ring.is-visible { opacity: .8; }
-        .cursor-ring.is-active {
-            width: 46px;
-            height: 46px;
-            border-color: rgba(210,184,139,.72);
-            background: rgba(184,154,107,.035);
-        }
+        .cursor-ring { display: none; }
 
         .section-jump {
             position: fixed;
@@ -200,12 +179,12 @@
             z-index: 1;
             pointer-events: none;
             background:
-                radial-gradient(circle 390px at var(--sx) var(--sy), rgba(184,154,107,.115), transparent 68%),
+                radial-gradient(circle 185px at var(--sx) var(--sy), rgba(184,154,107,.055), transparent 70%),
                 radial-gradient(circle 620px at 14% 84%, rgba(255,255,255,.024), transparent 72%);
-            opacity: .8;
+            opacity: .68;
             transition: opacity 700ms ease;
         }
-        .motion-section.is-current::before { opacity: 1; }
+        .motion-section.is-current::before { opacity: .82; }
         .motion-section > .hero-inner,
         .motion-section > .about-inner,
         .motion-section > .expertise-inner,
@@ -384,7 +363,7 @@
         .hero-network { display:block; width:100%; height:100%; }
         .hero-network-caption { position:absolute; right:2px; bottom:2px; color:rgba(243,239,231,.25); font-size:7px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
         .hero-name { position:relative; z-index:2; width:100%; }
-        .hero-name h1 { width:fit-content; font-family:var(--display); font-size:clamp(84px,13.1vw,220px); font-weight:400; line-height:.73; letter-spacing:-.052em; text-transform:uppercase; }
+        .hero-name h1 { width:fit-content; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; font-size:clamp(76px,13.4vw,226px); font-weight:430; line-height:.76; letter-spacing:-.078em; text-transform:uppercase; }
         .name-mask { display:block; overflow:hidden; padding:.04em .04em .08em 0; margin-bottom:-.08em; }
         .name-line { display:block; transform:translateY(112%); clip-path:inset(100% 0 0 0); animation:name-reveal 1180ms cubic-bezier(.16,1,.3,1) forwards; }
         .name-mask:first-child .name-line { color:rgba(243,239,231,.76); animation-delay:170ms; }
@@ -673,7 +652,7 @@
             .hero-meta { grid-template-columns:1fr; }
             .meta-right { display:none; }
             .hero-center { padding:92px 0 66px; }
-            .hero-name h1 { font-size:clamp(72px,22vw,122px); line-height:.76; }
+            .hero-name h1 { font-size:clamp(70px,21vw,118px); line-height:.78; letter-spacing:-.075em; }
             .hero-network-wrap { inset:10% -42% 13% 8%; opacity:.38; }
             .hero-network-caption { display:none; }
             .hero-footer { padding-top:22px; gap:26px; }
@@ -745,7 +724,6 @@
     <div class="ambient-world" aria-hidden="true"><div class="ambient-glow"></div><div class="ambient-grid"></div></div>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="page-progress" aria-hidden="true"></div>
-    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
     <div class="section-jump" id="sectionJump" aria-hidden="true">02</div>
 
     <div class="page-loader" id="pageLoader" aria-hidden="true">
@@ -1031,7 +1009,6 @@
             const pageIndex = document.getElementById('pageIndex');
             const menuToggle = document.getElementById('menuToggle');
             const mobileMenu = document.getElementById('mobileMenu');
-            const cursorRing = document.getElementById('cursorRing');
             const sectionJump = document.getElementById('sectionJump');
             const bahTimeline = document.getElementById('bahTimeline');
             const allegisTimeline = document.getElementById('allegisTimeline');
@@ -1046,7 +1023,6 @@
             const navLinks = [...document.querySelectorAll('[data-nav]')];
             const mobileLinks = [...document.querySelectorAll('[data-mobile-link]')];
             const magneticEls = [...document.querySelectorAll('[data-magnetic]')];
-            const hoverEls = [...document.querySelectorAll('[data-hover]')];
             const roles = [...document.querySelectorAll('.role')];
             const brandBlocks = [...document.querySelectorAll('[data-brand-block]')];
 
@@ -1058,8 +1034,6 @@
             let pointerNY = 0;
             let pointerX = window.innerWidth / 2;
             let pointerY = window.innerHeight / 2;
-            let ringX = pointerX;
-            let ringY = pointerY;
             let ticking = false;
             let jumpTimer;
             let activeSectionId = 'home';
@@ -1129,29 +1103,9 @@
                     pointerY = event.clientY;
                     pointerNX = (event.clientX / window.innerWidth) - .5;
                     pointerNY = (event.clientY / window.innerHeight) - .5;
-                    cursorRing?.classList.add('is-visible');
                     updateSectionGlow();
                     updateDepth();
                 }, { passive: true });
-
-                document.documentElement.addEventListener('mouseleave', () => cursorRing?.classList.remove('is-visible'));
-
-                let ringFrame = null;
-                const animateRing = () => {
-                    ringX += (pointerX - ringX) * .18;
-                    ringY += (pointerY - ringY) * .18;
-                    if (cursorRing) cursorRing.style.transform = `translate3d(${ringX - 13}px, ${ringY - 13}px, 0)`;
-                    const moving = Math.abs(pointerX - ringX) + Math.abs(pointerY - ringY) > .35;
-                    ringFrame = moving ? requestAnimationFrame(animateRing) : null;
-                };
-                window.addEventListener('pointermove', () => {
-                    if (!ringFrame) ringFrame = requestAnimationFrame(animateRing);
-                }, { passive:true });
-
-                hoverEls.forEach(el => {
-                    el.addEventListener('pointerenter', () => cursorRing?.classList.add('is-active'));
-                    el.addEventListener('pointerleave', () => cursorRing?.classList.remove('is-active'));
-                });
 
                 magneticEls.forEach(el => {
                     el.addEventListener('pointermove', event => {
@@ -1322,8 +1276,8 @@
                         const dx = baseX - localPX;
                         const dy = baseY - localPY;
                         const dist = Math.hypot(dx,dy);
-                        const influence = finePointer ? clamp(1 - dist / 220, 0, 1) : 0;
-                        return { x:baseX + driftX + (dx / Math.max(dist,1)) * influence * 4, y:baseY + driftY + (dy / Math.max(dist,1)) * influence * 4, influence };
+                        const influence = finePointer ? clamp(1 - dist / 180, 0, 1) : 0;
+                        return { x:baseX + driftX + (dx / Math.max(dist,1)) * influence * 3, y:baseY + driftY + (dy / Math.max(dist,1)) * influence * 3, influence };
                     });
 
                     edges.forEach((edge,index) => {
@@ -1333,22 +1287,22 @@
                         ctx.beginPath();
                         ctx.moveTo(a.x,a.y);
                         ctx.lineTo(b.x,b.y);
-                        ctx.strokeStyle = `rgba(184,154,107,${.08 + active * .19 + (index % 4 === 0 ? .025 : 0)})`;
+                        ctx.strokeStyle = `rgba(184,154,107,${.07 + active * .12 + (index % 4 === 0 ? .02 : 0)})`;
                         ctx.lineWidth = .7;
                         ctx.stroke();
                     });
 
                     pts.forEach((p,index) => {
-                        const pulse = .45 + Math.sin(time * .0012 + index) * .12;
-                        const r = 1.2 + p.influence * 2.2;
+                        const pulse = .42 + Math.sin(time * .0012 + index) * .1;
+                        const r = 1.1 + p.influence * 1.25;
                         ctx.beginPath();
                         ctx.arc(p.x,p.y,r,0,Math.PI*2);
-                        ctx.fillStyle = `rgba(210,184,139,${pulse + p.influence * .4})`;
+                        ctx.fillStyle = `rgba(210,184,139,${pulse + p.influence * .24})`;
                         ctx.fill();
-                        if (p.influence > .15) {
+                        if (p.influence > .2) {
                             ctx.beginPath();
-                            ctx.arc(p.x,p.y,7 + p.influence * 9,0,Math.PI*2);
-                            ctx.fillStyle = `rgba(184,154,107,${p.influence * .045})`;
+                            ctx.arc(p.x,p.y,5 + p.influence * 5,0,Math.PI*2);
+                            ctx.fillStyle = `rgba(184,154,107,${p.influence * .025})`;
                             ctx.fill();
                         }
                     });
