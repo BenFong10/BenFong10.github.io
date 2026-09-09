@@ -16,16 +16,13 @@
   const navbar = $('#navbar');
   const menu = $('#mobileMenu');
   const menuToggle = $('#menuToggle');
-  const motionToggle = $('#motionToggle');
   const main = $('#main');
   const progress = $('.page-progress');
   const spine = $('#spineProgress');
   const canvas = $('#signalCanvas');
   const roles = $$('.role, .brand-block');
   const timelines = $$('.timeline, .previous-roles');
-  let userPaused = false;
-  try { userPaused = sessionStorage.getItem('bf-motion') === 'paused'; } catch {}
-  let motionOff = reduced.matches || userPaused;
+  let motionOff = reduced.matches;
   let frame = 0;
   let scrollDirty = true;
   let layoutDirty = true;
@@ -115,23 +112,27 @@
     invalidateLayout();
   });
 
-  // Native anchors retain browser history, deep links and normal scrolling.
-  $$('a[href^="#"]').forEach(link => link.addEventListener('click', () => {
+  // Shortcuts land at the section start, never midway through a long smooth
+  // scroll. CSS scroll-padding reserves room for the fixed navigation.
+  // Preserve normal modified-click behavior, shareable hashes and Back/Forward.
+  $$('a[href^="#"]').forEach(link => link.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const target = document.getElementById(link.hash.slice(1));
     if (!target) return;
+    event.preventDefault();
     if (body.classList.contains('menu-open')) setMenu(false, false);
     target.querySelectorAll('[data-reveal-pending]').forEach(el => el.removeAttribute('data-reveal-pending'));
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.focus({ preventScroll: true });
+    if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+    target.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' });
+    scrollDirty = fieldDirty = true;
+    schedule();
   }));
 
   function updateMotion() {
-    motionOff = reduced.matches || userPaused;
+    motionOff = reduced.matches;
     root.dataset.motion = motionOff ? 'off' : 'on';
-    motionToggle.setAttribute('aria-pressed', String(motionOff));
-    motionToggle.setAttribute('aria-label', reduced.matches ? 'Reduced motion is enabled in your system' : motionOff ? 'Resume ambient animation' : 'Pause ambient animation');
-    motionToggle.disabled = reduced.matches;
-    $('#motionLabel').textContent = reduced.matches ? 'Reduced motion' : motionOff ? 'Motion off' : 'Motion on';
     if (motionOff) {
       $$('[data-reveal-pending]').forEach(el => el.removeAttribute('data-reveal-pending'));
       root.classList.remove('intro-play');
@@ -140,12 +141,6 @@
     fieldDirty = scrollDirty = true;
     schedule();
   }
-  motionToggle.hidden = !ctx;
-  motionToggle.addEventListener('click', () => {
-    userPaused = !userPaused;
-    try { sessionStorage.setItem('bf-motion', userPaused ? 'paused' : 'playing'); } catch {}
-    updateMotion();
-  });
   reduced.addEventListener('change', updateMotion);
   updateMotion();
 
@@ -264,7 +259,7 @@
     { x: .25, y: .44, sx: 1.12, sy: .84, tilt: .15, alpha: .22, lanes: 0 },
     { x: .73, y: .46, sx: 1.35, sy: .45, tilt: -.08, alpha: .12, lanes: .85 },
     { x: .83, y: .48, sx: .63, sy: 1.45, tilt: .35, alpha: .10, lanes: 0 },
-    { x: .73, y: .47, sx: .8, sy: .8, tilt: -.4, alpha: .65, lanes: 0 }
+    { x: .73, y: .47, sx: .8, sy: .8, tilt: -.4, alpha: .78, lanes: 0 }
   ];
   function fieldState() {
     const marker = scrollY + height * .6;
@@ -277,7 +272,7 @@
     if (compact.matches) {
       state.x = lerp(.76, state.x, .48);
       state.y = active === 'home' ? .34 : state.y;
-      state.alpha *= .84;
+      state.alpha *= .94;
     }
     return state;
   }
@@ -324,7 +319,7 @@
     ctx.clearRect(0, 0, width, height);
     const halo = ctx.createRadialGradient(width * state.x, height * state.y, radius * .1, width * state.x, height * state.y, radius * 1.45);
     halo.addColorStop(0, 'rgba(183,154,115,0)');
-    halo.addColorStop(.66, 'rgba(183,154,115,' + .035 * state.alpha + ')');
+    halo.addColorStop(.66, 'rgba(183,154,115,' + .05 * state.alpha + ')');
     halo.addColorStop(1, 'rgba(183,154,115,0)');
     ctx.fillStyle = halo;
     ctx.fillRect(0, 0, width, height);
@@ -338,13 +333,13 @@
         if (!step) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
       }
-      ctx.strokeStyle = 'rgba(183,154,115,' + (.055 + (Math.sin(v) + 1) * .033) * state.alpha + ')';
-      ctx.lineWidth = .65;
+      ctx.strokeStyle = 'rgba(212,188,153,' + (.09 + (Math.sin(v) + 1) * .045) * state.alpha + ')';
+      ctx.lineWidth = .8;
       ctx.stroke();
       // Batch point colours and reuse the thread samples. Avoid thousands of
       // canvas state changes and repeated trigonometry every frame.
       for (let bucket = 0; bucket < 3; bucket++) {
-        ctx.fillStyle = 'rgba(212,188,153,' + (.16 + bucket * .15) * state.alpha + ')';
+        ctx.fillStyle = 'rgba(222,201,171,' + (.22 + bucket * .17) * state.alpha + ')';
         for (const p of points) {
           if (Math.min(2, Math.floor((p.depth + p.influence) * 3)) !== bucket) continue;
           const size = .7 + bucket * .3;

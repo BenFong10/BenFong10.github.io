@@ -19,10 +19,15 @@ is capped at 1.6 on desktop and 1.35 on mobile. Fewer samples are used on mobile
 
 Continuous animation runs only while the hero or Connect is active and visible.
 Reading sections redraw only after scroll or layout changes. Animation stops when
-the page is hidden, the menu is open, the visitor pauses motion, or the system
+the page is hidden, the menu is open, or the system
 requests reduced motion. Reduced motion keeps a static field. The title sequence
 appears only on the first visit in a tab session, never blocks interaction, and is
 skipped for deep links and reduced motion.
+
+Motion follows the system preference automatically; there is no separate toggle.
+Section shortcuts land immediately at the top with space for the fixed navigation,
+including repeated clicks. Hash URLs and browser history are preserved. Normal
+scrolling remains native.
 
 The site remains readable and navigable without JavaScript. A CSS field remains
 when Canvas is unavailable. Font downloads use a system-font fallback.
